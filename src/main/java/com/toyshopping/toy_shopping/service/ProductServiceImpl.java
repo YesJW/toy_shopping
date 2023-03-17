@@ -49,6 +49,21 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ProductResponseDto changeProduct(Long numb, String name, int price, int stock) {
+        Product foundProduct = productRepository.findById(numb).get();
+        foundProduct.setName(name);
+        Product changeProduct = productRepository.save(foundProduct);
+
+        ProductResponseDto productResponseDto = new ProductResponseDto();
+        productResponseDto.setNumb(changeProduct.getNumb());
+        productResponseDto.setName(changeProduct.getName());
+        productResponseDto.setPrice(changeProduct.getPrice());
+        productResponseDto.setStock(changeProduct.getStock());
+
+        return productResponseDto;
+    }
+
+    @Override
     public void deleteProduct(Long number) throws Exception {
         productRepository.deleteById(number);
     }

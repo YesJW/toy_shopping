@@ -10,6 +10,8 @@ public interface ProductService {
 
     ProductResponseDto saveProduct(ProductDto productDto);
 
+    ProductResponseDto changeProduct(Long numb, String name, int price, int stock);
+
     void deleteProduct(Long number) throws Exception;
 
 }

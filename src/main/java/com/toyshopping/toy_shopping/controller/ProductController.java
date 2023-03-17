@@ -1,5 +1,6 @@
 package com.toyshopping.toy_shopping.controller;
 
+import com.toyshopping.toy_shopping.data.dto.ChangeProductDto;
 import com.toyshopping.toy_shopping.data.dto.ProductDto;
 import com.toyshopping.toy_shopping.data.dto.ProductResponseDto;
 import com.toyshopping.toy_shopping.service.ProductService;
@@ -37,6 +38,22 @@ public class ProductController{
 
         return ResponseEntity.status(HttpStatus.OK).body(productResponseDto);
     }
+
+
+    @PutMapping()
+    public ResponseEntity<ProductResponseDto> changeProductName(
+            @RequestBody ChangeProductDto changeProductDto) throws Exception {
+        ProductResponseDto productResponseDto = productService.changeProduct(
+                changeProductDto.getNumber(),
+                changeProductDto.getName(),
+                changeProductDto.getStock(),
+                changeProductDto.getPrice());
+
+        return ResponseEntity.status(HttpStatus.OK).body(productResponseDto);
+
+    }
+
+
 
     @DeleteMapping()
     public ResponseEntity<String> deleteProduct(Long number) throws Exception {
