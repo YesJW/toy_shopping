@@ -19,6 +19,6 @@ public class LoginController{
                                @RequestParam(value = "exception", required = false) String exception) {
         model.addAttribute("error",error);
         model.addAttribute("exception",exception);
-        return "login";
+        return "member/login";
     }
 }

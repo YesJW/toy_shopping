@@ -1,6 +1,7 @@
 package com.toyshopping.toy_shopping.data.entity;
 
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -29,5 +30,6 @@ public class User {
 
     @Column
     private String userAuth;
+
 
 }
