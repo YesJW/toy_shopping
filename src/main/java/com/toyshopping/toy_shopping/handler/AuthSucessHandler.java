@@ -1,6 +1,5 @@
 package com.toyshopping.toy_shopping.handler;
 
-import com.toyshopping.toy_shopping.repository.LoginRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;

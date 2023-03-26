@@ -19,16 +19,14 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @Builder
-@ToString(exclude = "name")
-@EqualsAndHashCode(callSuper = false)
-@Table(name = "user")
+@Table
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String userId;
+    private String uid;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(nullable = false)
@@ -49,7 +47,7 @@ public class User implements UserDetails {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public String getUsername() {
-        return this.userId;
+        return this.uid;
     }
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

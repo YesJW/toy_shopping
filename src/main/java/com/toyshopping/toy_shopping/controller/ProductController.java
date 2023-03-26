@@ -4,6 +4,8 @@ import com.toyshopping.toy_shopping.data.dto.ChangeProductDto;
 import com.toyshopping.toy_shopping.data.dto.ProductDto;
 import com.toyshopping.toy_shopping.data.dto.ProductResponseDto;
 import com.toyshopping.toy_shopping.service.ProductService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,9 @@ public class ProductController{
 
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 발급 받은 access_token", required = true, dataType = "String", paramType = "header")
+    })
     @PostMapping()
     public ResponseEntity<ProductResponseDto> createProduct(@RequestBody ProductDto productDto) {
         ProductResponseDto productResponseDto = productService.saveProduct(productDto);

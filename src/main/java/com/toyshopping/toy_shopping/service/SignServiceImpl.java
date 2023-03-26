@@ -1,15 +1,21 @@
 package com.toyshopping.toy_shopping.service;
 
+import com.toyshopping.toy_shopping.common.CommonResponse;
 import com.toyshopping.toy_shopping.config.security.JwtTokenProvider;
+import com.toyshopping.toy_shopping.data.dto.SignInResultDto;
+import com.toyshopping.toy_shopping.data.dto.SignUpResultDto;
 import com.toyshopping.toy_shopping.data.entity.User;
 import com.toyshopping.toy_shopping.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 
 import java.util.Collections;
 
+@Service
 public class SignServiceImpl implements SignService {
 
     private final Logger LOGGER = LoggerFactory.getLogger(SignServiceImpl.class);
@@ -31,14 +37,14 @@ public class SignServiceImpl implements SignService {
         User user;
         if (role.equalsIgnoreCase("admin")) {
             user = User.builder()
-                    .userId(id)
+                    .uid(id)
                     .name(name)
                     .password(passwordEncoder.encode(password))
                     .roles(Collections.singletonList("ROLE_ADMIN"))
                     .build();
         } else {
             user = User.builder()
-                    .userId(id)
+                    .uid(id)
                     .name(name)
                     .password(passwordEncoder.encode(password))
                     .roles(Collections.singletonList("ROLE_USER"))
@@ -61,9 +67,9 @@ public class SignServiceImpl implements SignService {
     }
 
     @Override
-    public SignInResultDto singIn(String id, String password) throws RuntimeException {
+    public SignInResultDto signIn(String id, String password) throws RuntimeException {
         LOGGER.info("[getSignInResult] signDataHandler 로 회원 정보 요철");
-        User user = userRepository.getByUserId(id);
+        User user = userRepository.getByUid(id);
         LOGGER.info("[getSignInResult] id : {} ", id);
 
         LOGGER.info("[getSignInResult] 패스워드 비교 수행");
@@ -74,7 +80,7 @@ public class SignServiceImpl implements SignService {
 
         LOGGER.info("[getSignInResult] SignInResultDto 객체 생성");
         SignInResultDto signInResultDto = SignInResultDto.builder()
-                .token(jwtTokenProvider.createToken(String.valueOf(user.getUserId()), user.getRoles()))
+                .token(jwtTokenProvider.createToken(String.valueOf(user.getUid()), user.getRoles()))
                 .build();
 
         LOGGER.info("[getSignInResult] SignInResult 객체에 값 주입");
@@ -86,7 +92,7 @@ public class SignServiceImpl implements SignService {
     private void setSuccessResult(SignUpResultDto result) {
         result.setSuccess(true);
         result.setCode(CommonResponse.SUCCESS.getCode());
-        result.setMsg(CommonResponse.SUCCESS.getCode());
+        result.setMsg(CommonResponse.SUCCESS.getMsg());
     }
 
     private void setFailResult(SignUpResultDto result) {
