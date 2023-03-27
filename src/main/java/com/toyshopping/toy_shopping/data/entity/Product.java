@@ -28,5 +28,8 @@ public class Product {
     @Column(nullable = false)
     private Integer stock;
 
+    @ManyToOne
+    @JoinColumn(name = "uno")
+    private User uno;
 
 }
