@@ -1,11 +1,15 @@
 package com.toyshopping.toy_shopping.service;
 
+import com.toyshopping.toy_shopping.config.security.JwtAuthenticationFilter;
 import com.toyshopping.toy_shopping.data.dto.ProductDto;
 import com.toyshopping.toy_shopping.data.dto.ProductResponseDto;
 import com.toyshopping.toy_shopping.data.dto.UserDto;
 import com.toyshopping.toy_shopping.data.entity.Product;
 import com.toyshopping.toy_shopping.data.entity.User;
 import com.toyshopping.toy_shopping.repository.ProductRepository;
+import com.toyshopping.toy_shopping.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -14,6 +18,9 @@ import org.springframework.stereotype.Service;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+
+    private final Logger LOGGER = LoggerFactory.getLogger(ProductServiceImpl.class);
+
 
     @Autowired
     public ProductServiceImpl(ProductRepository productRepository) {
@@ -26,7 +33,6 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(number).get();
         ProductResponseDto productResponseDto = new ProductResponseDto();
         productResponseDto.setNumb(product.getNumb());
-        productResponseDto.setUno(product.getUno().getId());
         productResponseDto.setName(product.getName());
         productResponseDto.setPrice(product.getPrice());
         productResponseDto.setStock(product.getStock());
@@ -36,14 +42,13 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponseDto saveProduct(ProductDto productDto) {
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserDto userDto = (UserDto)principal;
-        Long uno = userDto.getUserNo();
+        User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        LOGGER.info("[UserNo 가져오기] text : {}", user.getId());
         Product product = new Product();
         product.setName(productDto.getName());
         product.setPrice(productDto.getPrice());
         product.setStock(productDto.getStock());
-        product.setUno();
+        product.setUno(user);
         Product saveProduct = productRepository.save(product);
 
         ProductResponseDto productResponseDto = new ProductResponseDto();

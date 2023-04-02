@@ -6,7 +6,7 @@ import lombok.*;
 public class ProductDto {
 
     private String name;
-    private Long uno;
+    private Long userN;
     private int price;
     private int stock;
 
