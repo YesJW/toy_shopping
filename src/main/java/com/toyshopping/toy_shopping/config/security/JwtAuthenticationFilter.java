@@ -1,5 +1,6 @@
 package com.toyshopping.toy_shopping.config.security;
 
+import io.jsonwebtoken.JwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -27,10 +28,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         LOGGER.info("[doFilterInternal] token 값 추출 완료. token : {}", token);
 
         LOGGER.info("[doFilterInternal] token 값 유효성 체크 시작");
-        if (token != null && jwtTokenProvider.validateToken(token)) {
-            Authentication authentication = jwtTokenProvider.getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            LOGGER.info("[doFilterInternal] token 값 유효성 체크 완료");
+        try {
+            if (token != null && jwtTokenProvider.validateToken(token)) {
+                Authentication authentication = jwtTokenProvider.getAuthentication(token);
+                response.setHeader("X-AUTH-TOKEN", token);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                response.addHeader("X-AUTH-TOKEN",token);
+                LOGGER.info("[doFilterInternal] token 값 유효성 체크 완료");
+            }
+        } catch (JwtException exception) {
+            LOGGER.error("[JwtAuthenticationFilter] JWT parsing error : {}", exception.getMessage());
+            SecurityContextHolder.clearContext();
         }
 
         filterChain.doFilter(servletRequest, response);

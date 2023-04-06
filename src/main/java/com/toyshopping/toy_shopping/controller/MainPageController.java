@@ -1,0 +1,24 @@
+package com.toyshopping.toy_shopping.controller;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletResponse;
+
+@RestController
+@RequestMapping("/main")
+public class MainPageController {
+
+    private final Logger LOGGER = LoggerFactory.getLogger(MainPageController.class);
+    @GetMapping()
+    public ModelAndView mainPage() {
+        LOGGER.info("[mainPageGetMapping] mainpageController get 메서드 호출됨.");
+        ModelAndView mav = new ModelAndView("mainPage");
+        return mav;
+    }
+
+}

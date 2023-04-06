@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>User Information</title>
+  <link rel="stylesheet" href="/css/style2.css">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      // AJAX 요청 설정
+      $.ajax({
+        url: '/mypage/user_detail',
+        type: 'GET',
+        beforeSend: function myFunction(xhr) {
+          const token = localStorage.getItem('X-AUTH-TOKEN'); // localStorage에서 토큰을 가져옴
+          xhr.setRequestHeader("X-AUTH-TOKEN", token);
+        },
+        success: function (data, status, xhr) {
+          console.log('Success: ' + data);
+          document.getElementById('name').innerText = data.name;
+          document.getElementById('id').innerText = data.uid;
+          document.getElementById('role').innerText = data.roles;
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          console.log('Error: ' + errorThrown);
+        }
+      });
+    });
+
+  </script>
+  <link rel="icon" href="data:,">
+</head>
+
+<body>
+<div class="container">
+  <h1>User Information</h1>
+  <p>Name: <span id="name"></span></p>
+  <p>ID: <span id="id"></span></p>
+  <p>Role: <span id="role"></span></p>
+</div>
+<!--<script>-->
+<!--  fetch('/api/user', { method: 'GET' })-->
+<!--          .then(response => response.json())-->
+<!--          .then(data => {-->
+<!--            document.getElementById('name').innerText = data.name;-->
+<!--            document.getElementById('id').innerText = data.id;-->
+<!--            document.getElementById('role').innerText = data.role;-->
+<!--          })-->
+<!--          .catch(error => console.error(error));-->
+<!--</script-->
+</body>
+</html>

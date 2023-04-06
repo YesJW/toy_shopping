@@ -1,0 +1,94 @@
+/* 전체 레이아웃 설정 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* 헤더 설정 */
+header {
+    background-color: #222;
+    color: #fff;
+    padding: 10px 0;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+/* 메인 설정 */
+.banner {
+    background-image: url(banner.jpg);
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.featured-products {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.product-card {
+    border: 1px solid #ddd;
+    margin: 10px;
+    width: 300px;
+    padding: 10px;
+    text-align: center;
+}
+
+.product-card img {
+    width: 100%;
+    height: auto;
+}
+
+.product-card h3 {
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.product-card p {
+    margin-bottom: 10px;
+}
+
+.about-us {
+    background-color: #f2f2f2;
+    padding: 50px;
+}
+
+.about-us h2 {
+    margin-bottom: 20px;
+}
+
+.btn {
+    background-color: #222;
+    color: #fff;
+    padding: 10px 20px;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 20px;
+    border-radius: 5px;
+    transition: background-color 0.2s ease;
+}
+
+.btn:hover {
+    background-color: #444;
+}

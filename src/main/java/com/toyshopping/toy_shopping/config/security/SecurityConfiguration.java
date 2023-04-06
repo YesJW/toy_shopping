@@ -1,8 +1,11 @@
 package com.toyshopping.toy_shopping.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -19,6 +22,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.httpBasic().disable()
@@ -28,25 +37,24 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/sign-api/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/product/**").permitAll()
+                .antMatchers("/sign-api/**", "/main").permitAll()
+                .antMatchers(HttpMethod.GET, "/product/**").hasRole("ADMIN")
+                .antMatchers("/mypage").permitAll()
+                .antMatchers(HttpMethod.GET, "/mypage/user_detail").hasRole("ADMIN")
                 .antMatchers("**exception").permitAll()
-                .anyRequest().hasRole("ADMIN")
-                .and()
-                .formLogin()
-                .permitAll()
-                .loginPage("/login")
+                .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
                 .and()
-                .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-                .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint());
+
+        httpSecurity.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
     public void configure(WebSecurity webSecurity) {
         webSecurity.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**", "/sign-api/exception"
-        ,"/css/**", "/js/**", "/images/**", "/lib/**","/sign-api/**");
+        ,"/css/**", "/js/**", "/images/**", "/lib/**","/sign-api/**","/main");
+
     }
 }

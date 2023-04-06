@@ -73,6 +73,8 @@ public class JwtTokenProvider {
         return info;
     }
 
+
+
     public String resolveToken(HttpServletRequest request) {
         LOGGER.info("[resolveToekn] HTTP 헤더에서 Token 값 추출");
         return request.getHeader("X-AUTH-TOKEN");

@@ -68,7 +68,7 @@ public class SignServiceImpl implements SignService {
 
     @Override
     public SignInResultDto signIn(String id, String password) throws RuntimeException {
-        LOGGER.info("[getSignInResult] signDataHandler 로 회원 정보 요철");
+        LOGGER.info("[getSignInResult] signDataHandler 로 회원 정보 요청");
         User user = userRepository.getByUid(id);
         LOGGER.info("[getSignInResult] id : {} ", id);
 

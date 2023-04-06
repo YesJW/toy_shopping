@@ -2,8 +2,11 @@ package com.toyshopping.toy_shopping.controller;
 
 import com.toyshopping.toy_shopping.data.dto.SignInResultDto;
 import com.toyshopping.toy_shopping.data.dto.SignUpResultDto;
+import com.toyshopping.toy_shopping.data.entity.User;
+import com.toyshopping.toy_shopping.repository.UserRepository;
 import com.toyshopping.toy_shopping.service.SignService;
 import io.swagger.annotations.ApiParam;
+import io.swagger.models.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,13 +35,15 @@ public class SignController {
     @PostMapping(value = "/sign-in")
     public SignInResultDto signIn(
             @ApiParam(value = "ID", required = true) @RequestParam String id,
-            @ApiParam(value = "Password", required = true) @RequestParam String password) throws RuntimeException {
+            @ApiParam(value = "Password", required = true) @RequestParam String password,
+            HttpServletResponse response) throws RuntimeException {
         LOGGER.info("[signIn] 로그인을 시도하고 있습니다. id : {}, pw : ****", id);
         SignInResultDto signInResultDto = signService.signIn(id, password);
-
         if (signInResultDto.getCode() == 0) {
             LOGGER.info("[signIn] 정상적으로 로그인이 되었습니다. id : {}, token : {}", id, signInResultDto.getToken());
         }
+
+        response.setHeader("X-AUTH-TOKEN", signInResultDto.getToken());
         return signInResultDto;
     }
 
@@ -82,4 +88,9 @@ public class SignController {
         return mav;
     }
 
+    @GetMapping(value = "/login")
+    public ModelAndView login(){
+        ModelAndView mav = new ModelAndView("login");
+        return mav;
+    }
 }
