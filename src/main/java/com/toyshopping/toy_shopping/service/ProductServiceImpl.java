@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -28,15 +31,22 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponseDto getProduct(Long number) {
+    public List<ProductResponseDto> getProduct(Long user_no) {
 
-        Product product = productRepository.findById(number).get();
-        ProductResponseDto productResponseDto = new ProductResponseDto();
-        productResponseDto.setNumb(product.getNumb());
-        productResponseDto.setName(product.getName());
-        productResponseDto.setPrice(product.getPrice());
-        productResponseDto.setStock(product.getStock());
-        return productResponseDto;
+        List<Product> products = productRepository.findAllByUno_id(user_no);
+        List<ProductResponseDto> productResponseDtos = new ArrayList<>();
+        for (Product p : products){
+            ProductResponseDto productResponseDto = new ProductResponseDto();
+            productResponseDto.setNumb(p.getNumb());
+            productResponseDto.setName(p.getName());
+            productResponseDto.setPrice(p.getPrice());
+            productResponseDto.setStock(p.getStock());
+            productResponseDto.setUser_no(p.getUno().getId());
+            productResponseDtos.add(productResponseDto);
+        }
+
+
+        return productResponseDtos;
     }
 
     @Override

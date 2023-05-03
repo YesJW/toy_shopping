@@ -4,9 +4,11 @@ import com.toyshopping.toy_shopping.data.dto.ProductDto;
 import com.toyshopping.toy_shopping.data.dto.ProductResponseDto;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 public interface ProductService {
 
-    ProductResponseDto getProduct(Long number);
+    List<ProductResponseDto> getProduct(Long user_no);
 
     ProductResponseDto saveProduct(ProductDto productDto);
 

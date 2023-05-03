@@ -16,5 +16,6 @@ public class ProductResponseDto {
     private String name;
     private int price;
     private int stock;
+    private Long user_no;
 
 }

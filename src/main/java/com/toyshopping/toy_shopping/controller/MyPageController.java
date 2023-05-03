@@ -34,16 +34,14 @@ public class MyPageController {
         return mav;
     }
 
+    @GetMapping(value = "/sales")
+    public ModelAndView mySales() {
+        ModelAndView mav = new ModelAndView("sales");
+        LOGGER.info("[mySalesGetMethod] mySalesget 메서드 호출됨.");
+        return mav;
+    }
+
     @GetMapping("/user_detail")
-    /*public Map<String, String> currentUserName(Principal principal) {
-        LOGGER.info("[userDetailGetMethod] 메서드 호출됨 : {}", principal.getName());
-        User user = userRepository.getByUid(principal.getName());
-        Map<String, String> map_user = new HashMap<>();
-        map_user.put("id", user.getUid());
-        map_user.put("name", user.getName());
-        map_user.put("role", user.getRoles().toString());
-        return map_user;
-    }*/
     public User getUser(Principal principal){
         LOGGER.info("[getUser] getUser 메서드 호출됨.");
         User user = userRepository.getByUid(principal.getName());

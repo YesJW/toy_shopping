@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Products</title>
+  <link rel="stylesheet" href="/css/salesStyle.css">
+</head>
+<body>
+<h1>My Products</h1>
+<table>
+  <thead>
+  <tr>
+    <th>Product ID</th>
+    <th>Name</th>
+    <th>Price</th>
+    <th>Stock</th>
+  </tr>
+  </thead>
+  <tbody id="product-list">
+  </tbody>
+</table>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    // AJAX 요청 설정
+    $.ajax({
+      url: '/getProducts',
+      type: 'GET',
+      beforeSend: function myFunction(xhr) {
+        const token = localStorage.getItem('X-AUTH-TOKEN'); // localStorage에서 토큰을 가져옴
+        xhr.setRequestHeader("X-AUTH-TOKEN", token);
+      },
+      success: function (data, status, xhr) {
+        console.log('Success: ' + data);
+        if (data.length === 0) {
+          $('#product-list').append('<tr><td colspan="4">No products found</td></tr>');
+        } else {
+          data.forEach(function (product) {
+            $('#product-list').append(
+                    '<tr>' +
+                    '<td>' + product.numb + '</td>' +
+                    '<td>' + product.name + '</td>' +
+                    '<td>' + product.price + '</td>' +
+                    '<td>' + product.stock + '</td>' +
+                    '</tr>'
+            );
+          });
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log('Error: ' + errorThrown);
+      }
+    });
+  });
+</script>
+</html>

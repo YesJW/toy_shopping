@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="/css/addProductStyle.css">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <title>Product Registration</title>
+</head>
+<body>
+<h1>Product Registration</h1>
+<form id="add-product-form" action="/addProduct" method="POST">
+  <label for="name">Product Name:</label>
+  <input type="text" id="name" name="name"><br>
+
+  <label for="price">Price:</label>
+  <input type="number" id="price" name="price"><br>
+
+  <label for="stock">Stock:</label>
+  <input type="number" id="stock" name="stock"><br>
+
+  <button type="submit" id="add-product-btn">Register Product</button>
+</form>
+
+<script>
+  $(document).ready(function() {
+    $('#add-product-btn').click(function(e) {
+      e.preventDefault(); // form의 기본 동작을 막음
+
+      $.ajax({
+        url: '/addProduct',
+        type: 'POST',
+        beforeSend: function(xhr) {
+          const token = localStorage.getItem('X-AUTH-TOKEN');
+          xhr.setRequestHeader("X-AUTH-TOKEN", token);
+        },
+        data: $('#add-product-form').serialize(),
+        success: function(data, status, xhr) {
+          // 성공적으로 요청을 보냈을 때 실행할 코드 작성
+          alert('상품이 등록되었습니다.');
+          window.location.href='/main';
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          alert('상품 등록을 실패하였습니다.');
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>

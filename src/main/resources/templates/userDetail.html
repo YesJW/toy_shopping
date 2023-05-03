@@ -25,6 +25,11 @@
           console.log('Error: ' + errorThrown);
         }
       });
+
+      // 판매 목록 조회 버튼 클릭 시 이벤트 핸들러
+      $('#sales-btn').on('click', function() {
+        window.location.href = '/mypage/sales'; // 판매 목록 페이지로 이동
+      });
     });
 
   </script>
@@ -37,16 +42,7 @@
   <p>Name: <span id="name"></span></p>
   <p>ID: <span id="id"></span></p>
   <p>Role: <span id="role"></span></p>
+  <button id="sales-btn">판매 목록 조회</button>
 </div>
-<!--<script>-->
-<!--  fetch('/api/user', { method: 'GET' })-->
-<!--          .then(response => response.json())-->
-<!--          .then(data => {-->
-<!--            document.getElementById('name').innerText = data.name;-->
-<!--            document.getElementById('id').innerText = data.id;-->
-<!--            document.getElementById('role').innerText = data.role;-->
-<!--          })-->
-<!--          .catch(error => console.error(error));-->
-<!--</script-->
 </body>
 </html>
