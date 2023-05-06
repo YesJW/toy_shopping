@@ -3,6 +3,7 @@ package com.toyshopping.toy_shopping.controller;
 import com.toyshopping.toy_shopping.data.dto.ChangeProductDto;
 import com.toyshopping.toy_shopping.data.dto.ProductDto;
 import com.toyshopping.toy_shopping.data.dto.ProductResponseDto;
+import com.toyshopping.toy_shopping.data.entity.Product;
 import com.toyshopping.toy_shopping.data.entity.User;
 import com.toyshopping.toy_shopping.service.ProductService;
 import io.swagger.annotations.ApiImplicitParam;
@@ -18,8 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.security.Principal;
 import java.util.List;
 
 @Getter
@@ -34,14 +33,21 @@ public class ProductController{
         this.productService = productService;
     }
 
-    @GetMapping(value = "/getProducts")
-    public ResponseEntity<List<ProductResponseDto>> getProduct() {
+    @GetMapping(value = "/getUserProducts")
+    public ResponseEntity<List<ProductResponseDto>> getUserProduct() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         List<ProductResponseDto> productResponseDto = productService.getProduct(user.getId());
 
         return ResponseEntity.status(HttpStatus.OK).body(productResponseDto);
 
+    }
+
+    @GetMapping(value = "/getAllProduct")
+    public ResponseEntity<List<ProductResponseDto>> getAllProduct(){
+        List<ProductResponseDto> productResponseDtos = productService.getAllProduct();
+
+        return ResponseEntity.status(HttpStatus.OK).body(productResponseDtos);
     }
 
     @ApiImplicitParams({

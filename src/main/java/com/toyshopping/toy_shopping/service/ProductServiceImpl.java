@@ -1,13 +1,10 @@
 package com.toyshopping.toy_shopping.service;
 
-import com.toyshopping.toy_shopping.config.security.JwtAuthenticationFilter;
 import com.toyshopping.toy_shopping.data.dto.ProductDto;
 import com.toyshopping.toy_shopping.data.dto.ProductResponseDto;
-import com.toyshopping.toy_shopping.data.dto.UserDto;
 import com.toyshopping.toy_shopping.data.entity.Product;
 import com.toyshopping.toy_shopping.data.entity.User;
 import com.toyshopping.toy_shopping.repository.ProductRepository;
-import com.toyshopping.toy_shopping.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +80,23 @@ public class ProductServiceImpl implements ProductService {
         productResponseDto.setStock(changeProduct.getStock());
 
         return productResponseDto;
+    }
+
+    @Override
+    public List<ProductResponseDto> getAllProduct() {
+        List<Product> products = productRepository.findAll();
+        List<ProductResponseDto> productResponseDtos = new ArrayList<>();
+        for (Product p : products){
+            ProductResponseDto productResponseDto = new ProductResponseDto();
+            productResponseDto.setNumb(p.getNumb());
+            productResponseDto.setName(p.getName());
+            productResponseDto.setPrice(p.getPrice());
+            productResponseDto.setStock(p.getStock());
+            productResponseDto.setUser_no(p.getUno().getId());
+            productResponseDtos.add(productResponseDto);
+        }
+
+        return productResponseDtos;
     }
 
     @Override

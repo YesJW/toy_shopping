@@ -20,5 +20,11 @@ public class MainPageController {
         ModelAndView mav = new ModelAndView("mainPage");
         return mav;
     }
+    @GetMapping("/getProductPage")
+    public ModelAndView productPage(){
+        LOGGER.info("[getProductGetMapping] getProductPage 메서드 호출됨.");
+        ModelAndView mav = new ModelAndView("productPage");
+        return mav;
+    }
 
 }
