@@ -117,4 +117,62 @@ footer {
     right: 0;
     text-align: center;
 }
+/* 배너 */
+.banner {
+    background-image: url("https://example.com/banner.jpg");
+    background-size: cover;
+    color: white;
+    padding: 100px 20px;
+    text-align: center;
+}
+
+.banner h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    color: black
+}
+
+.banner p {
+    font-size: 24px;
+    margin-bottom: 40px;
+    color: black
+}
+
+.banner .btn {
+    background-color: #FCA311;
+    border: none;
+    border-radius: 25px;
+    color: white;
+    font-size: 20px;
+    padding: 10px 20px;
+    text-decoration: none;
+}
+
+/* 소개 */
+.about-us {
+    background-color: #F8F8F8;
+    padding: 100px 20px;
+    text-align: center;
+}
+
+.about-us h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+.about-us p {
+    font-size: 20px;
+    margin-bottom: 40px;
+}
+
+.about-us .btn {
+    background-color: #FCA311;
+    border: none;
+    border-radius: 25px;
+    color: white;
+    font-size: 20px;
+    padding: 10px 20px;
+    text-decoration: none;
+}
+
 

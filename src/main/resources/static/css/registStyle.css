@@ -1,0 +1,33 @@
+body {
+    font-family: sans-serif;
+}
+h1 {
+    text-align: center;
+}
+form {
+    width: 400px;
+    margin: 0 auto;
+}
+input[type=text], input[type=password] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+}
+button[type=submit] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+button[type=submit]:hover {
+    background-color: #45a049;
+}
+a {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+}

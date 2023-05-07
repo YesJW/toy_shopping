@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Shopping Mall</title>
@@ -16,7 +17,7 @@
     <include src="header.html"></include>
     <nav>
         <ul>
-            <li><a href="">Home</a></li>
+            <li><a href="/main">Home</a></li>
             <li><a href="/addProductPage">Shop</a></li>
             <li><a href="">Cart</a></li>
             <li><a href="">Contact</a></li>
@@ -29,45 +30,43 @@
         </ul>
     </nav>
 </header>
-
-<body>
-<header>
-    <nav>
-        <ul>
-            <li><a href="/main">Home</a></li>
-            <li><a href="/products">Products</a></li>
-            <li><a href="/about">About Us</a></li>
-        </ul>
-    </nav>
-</header>
-
 <main>
-    <h1>My Products</h1>
-    <div class="product-list">
-        <div class="product">
-            <div class="product-image">
-                <img src="https://via.placeholder.com/150" alt="Product Image">
-            </div>
-            <div class="product-info">
-                <h3 class="product-name">Product Name</h3>
-                <p class="product-description">Product Description</p>
-                <p class="product-price">$19.99</p>
-                <button class="add-to-cart-button">Add to Cart</button>
-            </div>
-        </div>
-        <div class="product">
-            <div class="product-image">
-                <img src="https://via.placeholder.com/150" alt="Product Image">
-            </div>
-            <div class="product-info">
-                <h3 class="product-name">Product Name</h3>
-                <p class="product-description">Product Description</p>
-                <p class="product-price">$24.99</p>
-                <button class="add-to-cart-button">Add to Cart</button>
-            </div>
-        </div>
-        <!-- More products -->
-    </div>
+    <div id="product-list"></div>
+    <script>
+        $(document).ready(function() {
+            // AJAX 요청 설정
+            $.ajax({
+                url: "/getAllProduct",
+                type: "GET",
+                dataType: "json",
+                success: function(data) {
+                    if (data.length === 0) {
+                        $('#product-list').append('<tr><td colspan="4">No products found</td></tr>');
+                    } else {
+                        data.forEach(function (product) {
+                            $('#product-list').append(
+                                '<div class="product">'+
+                                '<div class="product-image">'+
+                            //productHtml += '<img src="' + products[i].imageUrl + '" alt="Product Image">';
+                                '</div>'+
+                                '<div class="product-info">'+
+                                '<h3 class="product-name">' + product.name + '</h3>'+
+                                '<p class="product-stock">' +'남은 갯수: ' + product.stock + '</p>'+
+                                '<p class="product-price">$' + product.price + '</p>'+
+                                '<button class="add-to-cart-button">Add to Cart</button>'+
+                                '</div>'+
+                                '</div>'
+                            );
+                        });
+                    }
+                },
+                error: function() {
+                    alert("Error loading products.");
+                }
+            });
+
+        });
+    </script>
 </main>
 
 <footer>
