@@ -15,6 +15,17 @@ function myHeader() {
             }
         });
 
+        $.ajax({
+            url: '/getProductPage',
+            type: 'GET',
+            beforeSend: myFunction,
+            success: function (data, status, xhr) {
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+            }
+        });
+
+
         $('#login-btn').click(function () {
             $.ajax({
                 url: '/sign-api/login',

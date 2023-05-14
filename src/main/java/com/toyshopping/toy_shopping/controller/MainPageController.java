@@ -10,17 +10,17 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("/main")
+@RequestMapping()
 public class MainPageController {
 
     private final Logger LOGGER = LoggerFactory.getLogger(MainPageController.class);
-    @GetMapping()
+    @GetMapping(value = "/main")
     public ModelAndView mainPage() {
         LOGGER.info("[mainPageGetMapping] mainpageController get 메서드 호출됨.");
         ModelAndView mav = new ModelAndView("mainPage");
         return mav;
     }
-    @GetMapping("/getProductPage")
+    @GetMapping(value = "/getProductPage")
     public ModelAndView productPage(){
         LOGGER.info("[getProductGetMapping] getProductPage 메서드 호출됨.");
         ModelAndView mav = new ModelAndView("productPage");

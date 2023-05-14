@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Shopping Cart</title>
+  <link rel="stylesheet" type="text/css" href="/css/shoppingStyle.css">
+</head>
+<body>
+<h1>Shopping Cart</h1>
+<table>
+  <thead>
+  <tr>
+    <th>Product</th>
+    <th>Price</th>
+    <th>Quantity</th>
+    <th>Total</th>
+  </tr>
+  </thead>
+  <tbody id="cartItems">
+  <!-- 쇼핑카트 목록이 동적으로 추가될 자리 -->
+  </tbody>
+</table>
+<div id="cartSummary">
+  <p>Total: <span id="totalPrice"></span></p>
+  <button id="checkoutButton">Checkout</button>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/js/shoppingCart.js"></script>
+</body>
+</html>

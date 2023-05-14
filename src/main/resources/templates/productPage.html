@@ -34,12 +34,13 @@
     <div id="product-list"></div>
     <script>
         $(document).ready(function() {
-            // AJAX 요청 설정
+
             $.ajax({
                 url: "/getAllProduct",
                 type: "GET",
                 dataType: "json",
-                success: function(data) {
+                success: function(data, status, xhr) {
+
                     if (data.length === 0) {
                         $('#product-list').append('<tr><td colspan="4">No products found</td></tr>');
                     } else {
@@ -65,6 +66,36 @@
                 }
             });
 
+        });
+
+        $(document).on('click', '.add-to-cart-button', function() {
+            // 선택한 상품 정보 가져오기
+            var productInfo = $(this).closest('.product').find('.product-info');
+            var productName = productInfo.find('.product-name').text();
+            var productStock = productInfo.find('.product-stock').text();
+            var productPrice = productInfo.find('.product-price').text();
+
+            // 상품 정보를 서버로 전송하기 위한 AJAX 요청 설정
+            $.ajax({
+                url: '/addCart',
+                type: 'POST',
+                data: {
+                    pnum: 1, // 상품 번호
+                    stock: 10, // 상품 수량
+                    uno: 1 // 사용자 번호
+                },
+                dataType: 'json',
+                beforeSend: function (xhr){
+                    const token = localStorage.getItem('X-AUTH-TOKEN');
+                    xhr.setRequestHeader("X-AUTH-TOKEN", token);
+                },
+                success: function(response) {
+                    alert('상품이 장바구니에 추가되었습니다.');
+                },
+                error: function(error) {
+                    alert('상품 추가 중 오류가 발생했습니다.');
+                }
+            });
         });
     </script>
 </main>
