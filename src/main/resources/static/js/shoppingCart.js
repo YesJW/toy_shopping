@@ -2,7 +2,7 @@ $(document).ready(function() {
     // 쇼핑카트 목록을 가져와서 화면에 표시하는 함수
     function showCartList() {
         $.ajax({
-            url: '/getCartList',
+            url: '/getCart',
             type: 'GET',
             success: function (data, status, xhr) {
                 // 쇼핑카트 목록이 비어있을 경우

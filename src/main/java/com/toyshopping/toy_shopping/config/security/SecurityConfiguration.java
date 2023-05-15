@@ -38,7 +38,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/sign-api/**", "/main","/getProductPage").permitAll()
-                .antMatchers("/cart","/addCart").permitAll()
+                .antMatchers("/cart","/addCart","/getCart").permitAll()
                 .antMatchers("/mypage","/mypage/sales").permitAll()
                 .antMatchers(HttpMethod.GET, "/mypage/user_detail").hasRole("ADMIN")
                 .antMatchers("/addProductPage","/addProduct","/getUserProducts","/getAllProduct").permitAll()
