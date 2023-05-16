@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>상품 상세 페이지</title>
+  <!-- 필요한 CSS와 JavaScript 파일을 여기에 추가하세요 -->
+  <link rel="stylesheet" href="/css/productDetailStyle.css">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="/js/productDetail.js"></script>
+</head>
+<body>
+<div class="product-detail">
+  <h2 id="product-name"></h2>
+  <p id="product-stock"></p>
+  <p id="product-price"></p>
+  <div class="quantity-container">
+    <label for="quantity">구매 수량:</label>
+    <input type="number" id="quantity" min="1" value="1">
+  </div>
+  <button id="purchase-btn">구매하기</button>
+</div>
+</body>
+</html>

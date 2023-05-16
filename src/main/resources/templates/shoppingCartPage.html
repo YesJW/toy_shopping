@@ -10,13 +10,14 @@
 <table>
   <thead>
   <tr>
+    <th></th>
     <th>Product</th>
-    <th>Price</th>
     <th>Quantity</th>
-    <th>Total</th>
+    <th>Price</th>
+    <th></th>
   </tr>
   </thead>
-  <tbody id="cartItems">
+  <tbody id="cartList">
   <!-- 쇼핑카트 목록이 동적으로 추가될 자리 -->
   </tbody>
 </table>
@@ -26,5 +27,20 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="/js/shoppingCart.js"></script>
+<script>
+  $(document).ready(function() {
+    // 왼쪽 체크 버튼 클릭 시 이벤트 처리
+    $(document).on('click', '.check-button', function() {
+      // 체크 버튼의 상태 변경
+      $(this).toggleClass('checked');
+    });
+
+    // 오른쪽 삭제 버튼 클릭 시 이벤트 처리
+    $(document).on('click', '.delete-button', function() {
+      // 삭제 버튼이 속한 행 제거
+      $(this).closest('tr').remove();
+    });
+  });
+</script>
 </body>
 </html>

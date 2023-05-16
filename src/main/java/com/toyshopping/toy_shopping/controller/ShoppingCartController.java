@@ -35,13 +35,16 @@ public class ShoppingCartController {
     }
 
     @PostMapping(value = "/addCart")
-    public ResponseEntity<ShoppingCartResponseDto> addCartProduct(@RequestParam("pnum") Long pNum, @RequestParam("stock") int stock, @RequestParam("uno") Long uNo) {
+    public ResponseEntity<ShoppingCartResponseDto> addCartProduct(@RequestParam("pnum") Long pNum, @RequestParam("stock") int stock, @RequestParam("uno") Long uNo,
+                                                                  @RequestParam("price") int price, @RequestParam("name") String pName) {
         ShoppingCartDto shoppingCartDto = new ShoppingCartDto();
         shoppingCartDto.setStock(stock);
         shoppingCartDto.setPNum(pNum);
         shoppingCartDto.setUser_no(uNo);
 
         ShoppingCartResponseDto shoppingCartResponseDto = shoppingCartService.addShoppingCartProduct(shoppingCartDto);
+        shoppingCartResponseDto.setPName(pName);
+        shoppingCartResponseDto.setPrice(price);
         return ResponseEntity.status(HttpStatus.OK).body(shoppingCartResponseDto);
     }
 

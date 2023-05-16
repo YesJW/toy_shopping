@@ -8,7 +8,9 @@ import java.util.List;
 
 public interface ProductService {
 
-    List<ProductResponseDto> getProduct(Long user_no);
+    List<ProductResponseDto> getUserProduct(Long user_no);
+
+    ProductResponseDto getProduct(Long id);
 
     ProductResponseDto saveProduct(ProductDto productDto);
 

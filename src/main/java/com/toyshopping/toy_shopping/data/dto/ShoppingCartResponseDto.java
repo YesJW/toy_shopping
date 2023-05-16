@@ -13,7 +13,8 @@ import lombok.Setter;
 public class ShoppingCartResponseDto {
     private Long cNum;
     private Long pNum;
-    //private int price;
+    private int price;
+    private String pName;
     private int stock;
     private Long user_no;
 

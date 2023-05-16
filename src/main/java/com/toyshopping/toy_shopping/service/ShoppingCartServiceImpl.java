@@ -58,6 +58,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
             shoppingCartResponseDto.setPNum(shoppingCart.getPNum().getNumb());
             shoppingCartResponseDto.setUser_no(shoppingCart.getUno().getId());
             shoppingCartResponseDto.setStock(shoppingCart.getStock());
+            shoppingCartResponseDto.setPrice(shoppingCart.getStock() * shoppingCart.getPNum().getPrice());
+            shoppingCartResponseDto.setPName(shoppingCart.getPNum().getName());
             shoppingCartDtos.add(shoppingCartResponseDto);
 
         }

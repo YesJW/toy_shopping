@@ -3,12 +3,10 @@ package com.toyshopping.toy_shopping.controller;
 import com.toyshopping.toy_shopping.data.dto.ChangeProductDto;
 import com.toyshopping.toy_shopping.data.dto.ProductDto;
 import com.toyshopping.toy_shopping.data.dto.ProductResponseDto;
-import com.toyshopping.toy_shopping.data.entity.Product;
 import com.toyshopping.toy_shopping.data.entity.User;
 import com.toyshopping.toy_shopping.service.ProductService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiParam;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -24,10 +22,11 @@ import java.util.List;
 @Getter
 @Setter
 @RestController
-public class ProductController{
+public class ProductController {
 
     private final ProductService productService;
     private final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
+
     @Autowired
     public ProductController(ProductService productService) {
         this.productService = productService;
@@ -37,14 +36,14 @@ public class ProductController{
     public ResponseEntity<List<ProductResponseDto>> getUserProduct() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        List<ProductResponseDto> productResponseDto = productService.getProduct(user.getId());
+        List<ProductResponseDto> productResponseDto = productService.getUserProduct(user.getId());
 
         return ResponseEntity.status(HttpStatus.OK).body(productResponseDto);
 
     }
 
     @GetMapping(value = "/getAllProduct")
-    public ResponseEntity<List<ProductResponseDto>> getAllProduct(){
+    public ResponseEntity<List<ProductResponseDto>> getAllProduct() {
         List<ProductResponseDto> productResponseDtos = productService.getAllProduct();
 
         return ResponseEntity.status(HttpStatus.OK).body(productResponseDtos);
@@ -54,7 +53,7 @@ public class ProductController{
             @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 발급 받은 access_token", required = true, dataType = "String", paramType = "header")
     })
     @PostMapping(value = "/addProduct")
-    public ResponseEntity<ProductResponseDto> createProduct(@RequestParam("name") String name,  @RequestParam("price") int price, @RequestParam("stock") int stock) {
+    public ResponseEntity<ProductResponseDto> createProduct(@RequestParam("name") String name, @RequestParam("price") int price, @RequestParam("stock") int stock) {
         ProductDto productDto = new ProductDto();
         productDto.setName(name);
         productDto.setStock(stock);
@@ -85,12 +84,25 @@ public class ProductController{
 
     }
 
-
-
     @DeleteMapping()
     public ResponseEntity<String> deleteProduct(Long number) throws Exception {
         productService.deleteProduct(number);
         return ResponseEntity.status(HttpStatus.OK).body("정상적으로 삭제되었습니다.");
     }
 
+    @GetMapping(value = "/getProductDetail")
+    public ProductResponseDto getProductDetail(@RequestParam("id") Long productId) {
+        LOGGER.info("[getProductDetailGetMethod] getProductDetail 메서드 호출됨.");
+        // productId에 해당하는 상품 정보를 데이터베이스나 다른 저장소에서 가져온다고 가정
+        ProductResponseDto product = productService.getProduct(productId);
+
+        return product;
+    }
+
+    @GetMapping(value = "/productDetail")
+    public ModelAndView productDetailPage() {
+        ModelAndView mav = new ModelAndView("productDetail");
+        LOGGER.info("[productDetailGetMethod] productDetail 메서드 호출됨.");
+        return mav;
+    }
 }

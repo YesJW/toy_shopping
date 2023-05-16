@@ -28,7 +28,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductResponseDto> getProduct(Long user_no) {
+    public List<ProductResponseDto> getUserProduct(Long user_no) {
 
         List<Product> products = productRepository.findAllByUno_id(user_no);
         List<ProductResponseDto> productResponseDtos = new ArrayList<>();
@@ -44,6 +44,20 @@ public class ProductServiceImpl implements ProductService {
 
 
         return productResponseDtos;
+    }
+
+    @Override
+    public ProductResponseDto getProduct(Long id) {
+        Product product = productRepository.findById(id).get();
+        ProductResponseDto productResponseDto = new ProductResponseDto();
+        productResponseDto.setName(product.getName());
+        productResponseDto.setStock(product.getStock());
+        productResponseDto.setUser_no(product.getUno().getId());
+        productResponseDto.setPrice(product.getPrice());
+        productResponseDto.setNumb(product.getNumb());
+
+        return productResponseDto;
+
     }
 
     @Override
