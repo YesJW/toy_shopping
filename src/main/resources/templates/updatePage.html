@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Product</title>
+  <link rel="stylesheet" href="/css/updateProductStyle.css">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="/js/headerjs.js"></script>
+  <script>
+    myHeader();
+  </script>
+<!--  <style>-->
+<!--    label {-->
+<!--      display: block;-->
+<!--      margin-bottom: 10px;-->
+<!--    }-->
+
+<!--    input[type="text"],-->
+<!--    input[type="number"] {-->
+<!--      width: 100%;-->
+<!--      padding: 5px;-->
+<!--      margin-bottom: 10px;-->
+<!--    }-->
+
+<!--    button {-->
+<!--      padding: 10px 20px;-->
+<!--      background-color: #4CAF50;-->
+<!--      color: white;-->
+<!--      border: none;-->
+<!--      cursor: pointer;-->
+<!--    }-->
+
+<!--    button:hover {-->
+<!--      background-color: #45a049;-->
+<!--    }-->
+<!--  </style>-->
+</head>
+
+<body>
+<header>
+  <include src="header.html"></include>
+  <nav>
+    <!-- 네비게이션 바 내용 생략 -->
+  </nav>
+</header>
+<h1>Edit Product</h1>
+<form id="edit-product-form">
+  <label for="product-id">Product ID:</label>
+  <input type="text" id="product-id" name="product-id" readonly>
+
+  <label for="product-name">Product Name:</label>
+  <input type="text" id="product-name" name="product-name">
+
+  <label for="product-price">Price:</label>
+  <input type="number" id="product-price" name="product-price">
+
+  <label for="product-stock">Stock:</label>
+  <input type="number" id="product-stock" name="product-stock">
+
+  <button type="submit">Save</button>
+</form>
+
+<script>
+  $(document).ready(function() {
+    var productId = getProductIdFromURL();
+    // AJAX 요청 설정
+    $.ajax({
+      url: '/getProductDetail', // 상품 정보를 가져오는 API 엔드포인트
+      type: 'GET',
+      data: {id : productId},
+      beforeSend: function myFunction(xhr) {
+        const token = localStorage.getItem('X-AUTH-TOKEN'); // localStorage에서 토큰을 가져옴
+        xhr.setRequestHeader("X-AUTH-TOKEN", token);
+
+      },
+      success: function (data, status, xhr) {
+        console.log('Success: ' + data);
+
+        // 가져온 상품 정보를 양식에 표시
+        $('#product-id').val(data.numb);
+        $('#product-name').val(data.name);
+        $('#product-price').val(data.price);
+        $('#product-stock').val(data.stock);
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.log('Error: ' + errorThrown);
+      }
+    });
+
+    // 폼 제출 이벤트 처리
+    $('#edit-product-form').submit(function(event) {
+      event.preventDefault();
+
+      // 입력된 상품 정보 가져오기
+      const numb = $('#product-id').val();
+      const name = $('#product-name').val();
+      const price = $('#product-price').val();
+      const stock = $('#product-stock').val();
+
+      const changeProductDto = {
+        number: numb,
+        name: name,
+        stock: stock,
+        price: price
+      };
+      // 상품 정보 업데이트를 위한 AJAX 요청 설정
+      $.ajax({
+        url: '/updateProduct', // 상품 정보를 업데이트하는 API 엔드포인트
+        type: 'PUT',
+        data: JSON.stringify(changeProductDto),
+        contentType: 'application/json',
+        beforeSend: function myFunction(xhr) {
+          const token = localStorage.getItem('X-AUTH-TOKEN'); // localStorage에서 토큰을 가져옴
+          xhr.setRequestHeader("X-AUTH-TOKEN", token);
+
+        },
+        success: function(data, status, xhr) {
+          console.log('Product edited successfully');
+
+          // 업데이트 성공 시 추가적인 로직 수행
+          // 예: 화면 새로고침 또는 업데이트된 정보 표시
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          console.log('Error editing product: ' + errorThrown);
+          // 업데이트 실패 시 추가적인 로직 수행
+          // 예: 오류 메시지 표시 또는 재시도 옵션 제공
+        }
+      });
+    });
+    function getProductIdFromURL() {
+      var urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('id');
+    }
+  });
+</script>
+</body>
+
+</html>

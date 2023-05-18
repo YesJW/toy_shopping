@@ -1,14 +1,37 @@
 <!DOCTYPE html>
-<html>
-<head>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"><head>
   <meta charset="UTF-8">
   <title>상품 상세 페이지</title>
   <!-- 필요한 CSS와 JavaScript 파일을 여기에 추가하세요 -->
   <link rel="stylesheet" href="/css/productDetailStyle.css">
+  <link rel="stylesheet" href="/css/style.css">
+
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="/js/productDetail.js"></script>
+  <script src="/js/headerjs.js"></script>
+  <script>
+    myHeader();
+  </script>
 </head>
 <body>
+<header>
+  <include src="header.html"></include>
+  <nav>
+    <ul>
+      <li><a href="/main">Home</a></li>
+      <li><a href="/addProductPage">Shop</a></li>
+      <li><a href="/cart">Cart</a></li>
+      <li><a href="">Contact</a></li>
+      <li>
+        <a href="/sign-api/login" id="login-btn" sec:authorize="isAnonymous()">Login</a>
+        <a href="" id="logout-btn" sec:authorize="isAuthenticated()">Logout</a>
+      </li>
+      <li><a href="/sign-api/register" id="register-btn">Sign up</a></li>
+      <li><a href="/mypage" id ="mypage-btn">My Page</a></li>
+    </ul>
+  </nav>
+</header>
 <div class="product-detail">
   <h2 id="product-name"></h2>
   <p id="product-stock"></p>

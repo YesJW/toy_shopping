@@ -48,6 +48,17 @@ function myHeader() {
             });
         });
 
+        $('#register-btn').click(function () {
+            $.ajax({
+                url: '/sign-api/register',
+                type: 'GET',
+                success: function (data, status, xhr) {
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                }
+            });
+        });
+
         $('#mypage-btn').click(function () {
             $.ajax({
                 url: '/mypage',

@@ -1,11 +1,34 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="/css/registStyle.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="/js/headerjs.js"></script>
+  <script>
+    myHeader();
+  </script>
   <title>sign up</title>
 </head>
 <body>
+<header>
+  <include src="header.html"></include>
+  <nav>
+    <ul>
+      <li><a href="/main">Home</a></li>
+      <li><a href="/addProductPage">Shop</a></li>
+      <li><a href="/cart">Cart</a></li>
+      <li><a href="">Contact</a></li>
+      <li>
+        <a href="/sign-api/login" id="login-btn" sec:authorize="isAnonymous()">Login</a>
+        <a href="" id="logout-btn" sec:authorize="isAuthenticated()">Logout</a>
+      </li>
+      <li><a href="/sign-api/register" id="register-btn">Sign up</a></li>
+      <li><a href="/mypage" id ="mypage-btn">My Page</a></li>
+    </ul>
+  </nav>
+</header>
 <h1>Sign Up</h1> <hr>
 
 <form th:action="@{/sign-api/sign-up}" method="POST">

@@ -1,6 +1,8 @@
 $(document).ready(function() {
     // 쇼핑카트 목록을 가져와서 화면에 표시하는 함수
     function showCartList() {
+        $('#cartList').empty();
+
         $.ajax({
             url: '/getCart',
             type: 'GET',
@@ -82,6 +84,12 @@ $(document).ready(function() {
                             }
                         });
 
+                        deleteButton.addEventListener('click', function() {
+                            const productId = item.cnum;
+                            removeFromCart(productId);
+                        });
+
+
                     }
 
                     //$('#cartList').html(html);
@@ -97,12 +105,17 @@ $(document).ready(function() {
     showCartList();
 
     // 쇼핑카트에서 상품 삭제 버튼 클릭 시
-    $('#cartList').on('click', '.cart-item-remove', function() {
-        const itemId = $(this).data('id');
+
+    function removeFromCart(productId) {
+        const itemId = productId;
         $.ajax({
             url: '/removeFromCart',
-            type: 'POST',
-            data: {itemId: itemId},
+            type: 'DELETE',
+            data: {cnum: itemId},
+            beforeSend: function (xhr){
+                const token = localStorage.getItem('X-AUTH-TOKEN');
+                xhr.setRequestHeader("X-AUTH-TOKEN", token);
+            },
             success: function (data, status, xhr) {
                 // 쇼핑카트 목록을 다시 가져와서 화면에 표시
                 showCartList();
@@ -111,5 +124,6 @@ $(document).ready(function() {
                 console.log('Error: ' + errorThrown);
             }
         });
-    });
+    };
 });
+

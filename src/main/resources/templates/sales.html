@@ -1,11 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
   <meta charset="UTF-8">
   <title>My Products</title>
   <link rel="stylesheet" href="/css/salesStyle.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="/js/headerjs.js"></script>
+  <script>
+    myHeader();
+  </script>
+  <style>
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+  </style>
 </head>
+
 <body>
+<header>
+  <include src="header.html"></include>
+  <nav>
+    <!-- 네비게이션 바 내용 생략 -->
+  </nav>
+</header>
 <h1>My Products</h1>
 <table>
   <thead>
@@ -14,12 +35,14 @@
     <th>Name</th>
     <th>Price</th>
     <th>Stock</th>
+    <th>Action</th>
   </tr>
   </thead>
   <tbody id="product-list">
   </tbody>
 </table>
 </body>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   $(document).ready(function() {
@@ -34,24 +57,59 @@
       success: function (data, status, xhr) {
         console.log('Success: ' + data);
         if (data.length === 0) {
-          $('#product-list').append('<tr><td colspan="4">No products found</td></tr>');
+          $('#product-list').append('<tr><td colspan="5">No products found</td></tr>');
         } else {
           data.forEach(function (product) {
-            $('#product-list').append(
-                    '<tr>' +
-                    '<td>' + product.numb + '</td>' +
-                    '<td>' + product.name + '</td>' +
-                    '<td>' + product.price + '</td>' +
-                    '<td>' + product.stock + '</td>' +
-                    '</tr>'
-            );
+            const row = $('<tr>');
+            row.append('<td>' + product.numb + '</td>');
+            row.append('<td>' + product.name + '</td>');
+            row.append('<td>' + product.price + '</td>');
+            row.append('<td>' + product.stock + '</td>');
+
+            const actionCell = $('<td>');
+            const editButton = $('<button>').text('Edit');
+            const deleteButton = $('<button>').text('Delete');
+
+            // 수정 버튼 클릭 이벤트 처리
+            editButton.on('click', function() {
+              const productId = product.numb;
+
+              // 수정 페이지로 이동하고 productId를 쿼리 파라미터로 전달
+              window.location.href = '/updatePage?id=' + productId;
+            });
+
+            // 삭제 버튼 클릭 이벤트 처리
+            deleteButton.on('click', function() {
+              const productId = product.numb;
+
+              // 상품 삭제 API 호출
+              $.ajax({
+                url: '/deleteProduct',
+                type: 'DELETE',
+                data: { number: productId },
+                success: function(data, status, xhr) {
+                  console.log('Product deleted: ' + productId);
+                  // 상품 삭제 성공 시 추가적인 로직 수행
+                  location.reload();
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                  console.log('Error deleting product: ' + productId);
+                  // 상품 삭제 실패 시 추가적인 로직 수행
+                }
+              });
+            });
+
+            actionCell.append(editButton, deleteButton);
+            row.append(actionCell);
+            $('#product-list').append(row);
           });
         }
       },
-      error: function (jqXHR, textStatus, errorThrown) {
+      error: function(jqXHR, textStatus, errorThrown) {
         console.log('Error: ' + errorThrown);
       }
     });
   });
 </script>
+
 </html>

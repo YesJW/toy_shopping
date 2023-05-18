@@ -5,13 +5,11 @@ import com.toyshopping.toy_shopping.data.dto.ShoppingCartDto;
 import com.toyshopping.toy_shopping.data.dto.ShoppingCartResponseDto;
 import com.toyshopping.toy_shopping.data.entity.User;
 import com.toyshopping.toy_shopping.service.ShoppingCartService;
+import io.swagger.models.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -54,5 +52,12 @@ public class ShoppingCartController {
         List<ShoppingCartResponseDto> shoppingCartProducts = shoppingCartService.getShoppingCartProduct(user.getId());
 
         return ResponseEntity.status(HttpStatus.OK).body(shoppingCartProducts);
+    }
+
+    @DeleteMapping(value = "/removeFromCart")
+    public ResponseEntity<String> removeFromCart(@RequestParam("cnum") Long id) throws Exception{
+        shoppingCartService.deleteShoppingCartProduct(id);
+        return ResponseEntity.status(HttpStatus.OK).body("정상적으로 삭제되었습니다.");
+
     }
 }

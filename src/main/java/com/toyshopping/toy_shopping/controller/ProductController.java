@@ -71,7 +71,7 @@ public class ProductController {
         return mav;
     }
 
-    @PutMapping()
+    @PutMapping("/updateProduct")
     public ResponseEntity<ProductResponseDto> changeProductName(
             @RequestBody ChangeProductDto changeProductDto) throws Exception {
         ProductResponseDto productResponseDto = productService.changeProduct(
@@ -84,8 +84,8 @@ public class ProductController {
 
     }
 
-    @DeleteMapping()
-    public ResponseEntity<String> deleteProduct(Long number) throws Exception {
+    @DeleteMapping("/deleteProduct")
+    public ResponseEntity<String> deleteProduct(@RequestParam("number") Long number) throws Exception {
         productService.deleteProduct(number);
         return ResponseEntity.status(HttpStatus.OK).body("정상적으로 삭제되었습니다.");
     }
@@ -103,6 +103,13 @@ public class ProductController {
     public ModelAndView productDetailPage() {
         ModelAndView mav = new ModelAndView("productDetail");
         LOGGER.info("[productDetailGetMethod] productDetail 메서드 호출됨.");
+        return mav;
+    }
+
+    @GetMapping(value = "/updatePage")
+    public ModelAndView updatePage() {
+        ModelAndView mav = new ModelAndView("updatePage");
+        LOGGER.info("[updateProductGetMethod] updateProduct 메서드 호출됨.");
         return mav;
     }
 }

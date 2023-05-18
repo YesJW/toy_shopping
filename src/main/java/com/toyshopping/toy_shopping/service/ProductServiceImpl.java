@@ -82,9 +82,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponseDto changeProduct(Long numb, String name, int price, int stock) {
+    public ProductResponseDto changeProduct(Long numb, String name, int stock, int price) {
         Product foundProduct = productRepository.findById(numb).get();
         foundProduct.setName(name);
+        foundProduct.setStock(stock);
+        foundProduct.setPrice(price);
         Product changeProduct = productRepository.save(foundProduct);
 
         ProductResponseDto productResponseDto = new ProductResponseDto();

@@ -1,11 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
   <title>Shopping Cart</title>
   <link rel="stylesheet" type="text/css" href="/css/shoppingStyle.css">
+  <link rel="stylesheet" type="text/css" href="/css/style.css">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="/js/headerjs.js"></script>
+  <script>myHeader()</script>
 </head>
 <body>
+<header>
+  <include src="header.html"></include>
+  <nav>
+    <ul>
+      <li><a href="/main">Home</a></li>
+      <li><a href="/addProductPage">Shop</a></li>
+      <li><a href="/cart">Cart</a></li>
+      <li><a href="">Contact</a></li>
+      <li>
+        <a href="/sign-api/login" id="login-btn" sec:authorize="isAnonymous()">Login</a>
+        <a href="" id="logout-btn" sec:authorize="isAuthenticated()">Logout</a>
+      </li>
+      <li><a href="/sign-api/register" id="register-btn">Sign up</a></li>
+      <li><a href="/mypage" id ="mypage-btn">My Page</a></li>
+    </ul>
+  </nav>
+</header>
 <h1>Shopping Cart</h1>
 <table>
   <thead>
@@ -33,12 +55,6 @@
     $(document).on('click', '.check-button', function() {
       // 체크 버튼의 상태 변경
       $(this).toggleClass('checked');
-    });
-
-    // 오른쪽 삭제 버튼 클릭 시 이벤트 처리
-    $(document).on('click', '.delete-button', function() {
-      // 삭제 버튼이 속한 행 제거
-      $(this).closest('tr').remove();
     });
   });
 </script>
