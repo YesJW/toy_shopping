@@ -20,11 +20,10 @@
 			$.ajax({
 				url: '/sign-api/sign-in',
 				type: 'POST',
-
 				data: {
 					'id': id,
 					'password': password,
-					'token' : token
+					'token': token
 				},
 				datatype: "json",
 				success: function(data, status, xhr) {
@@ -32,11 +31,11 @@
 					const jwt = xhr.getResponseHeader('X-AUTH-TOKEN');
 					localStorage.setItem('X-AUTH-TOKEN', jwt);
 					$.ajax({
-						url: '/main', // mainPage를 요청하는 API endpoint 경로
+						url: '/main',
 						type: 'GET',
-						headers: { 'X-AUTH-TOKEN': jwt }, // JWT 토큰을 헤더에 포함
+						headers: { 'X-AUTH-TOKEN': jwt },
 						success: function(data) {
-							window.location.href = '/main'
+							window.location.href = '/main';
 						},
 						error: function(jqXHR, textStatus, errorThrown) {
 							console.log('Error: ' + errorThrown);
@@ -46,10 +45,34 @@
 				error: function(jqXHR, textStatus, errorThrown) {
 					console.log('Error: ' + errorThrown);
 				}
-			})
+			});
+		}
+	</script>
+	<style>
+		.additional-options {
+			display: flex;
+			justify-content: space-between;
+			margin-top: 10px;
+		}
+		.additional-options button {
+			width: 120px;
+			height: 30px;
+			font-size: 12px;
+		}
+		.input-group {
+			margin-top: 20px;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+		}
+		.input-group button{
+			margin-top: 20px;
+		}
+		.input-group label{
+			margin-top: 10px;
 		}
 
-	</script>
+	</style>
 </head>
 <body>
 <header>
@@ -69,19 +92,32 @@
 		</ul>
 	</nav>
 </header>
-<h1>Login Page</h1>
+<h1>로그인 페이지</h1>
 <form>
-	<div>
-		<label for="id">ID:</label>
+	<div class="input-group">
+		<label for="id">아이디:</label>
 		<input type="text" id="id" name="id">
-	</div>
-	<div>
-		<label for="password">Password:</label>
+		<label for="password">비밀번호:</label>
 		<input type="password" id="password" name="password">
+		<button type="button"  onclick="submitForm()">로그인</button>
 	</div>
-	<div>
-		<button type="button" onclick="submitForm()">Login</button>
+<!--	<div class="input-group">-->
+<!--		<label for="password">비밀번호:</label>-->
+<!--		<input type="password" id="password" name="password">-->
+<!--	</div>-->
+<!--	<div class="input-group">-->
+<!--		<button type="button" onclick="submitForm()">로그인</button>-->
+<!--	</div>-->
+	<div class="additional-options">
+		<button type="button" onclick="findIdPage()">아이디 찾기</button>
+		<button type="button" onclick="findPassword()">비밀번호 찾기</button>
 	</div>
 </form>
+<script>
+	function findIdPage() {
+		window.location.href = '/getFindIdPage';
+	}
+</script>
+
 </body>
 </html>

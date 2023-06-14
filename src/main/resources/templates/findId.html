@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <title>Shopping Mall</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<!--  <script src="/js/headerjs.js"></script>-->
+<!--  <script>-->
+<!--    myHeader();-->
+<!--  </script>-->
+  <meta charset="UTF-8">
+  <title>아이디 찾기</title>
+  <style>
+    .container {
+      width: 300px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .input-group {
+      margin-bottom: 10px;
+    }
+    .input-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .btn-container {
+      text-align: center;
+    }
+    .btn-container button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 4px;
+    }
+    .result-container {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2>아이디 찾기</h2>
+    <div class="input-group">
+      <label for="name">이름:</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+    <div class="input-group">
+      <label for="phone">전화번호:</label>
+      <input type="text" id="phone" name="phone" required>
+    </div>
+    <div class="btn-container">
+      <button type="submit" onclick="findId(document.getElementById('name').value,document.getElementById('phone').value)">검색</button>
+    </div>
+  </form>
+
+  <div class="result-container">
+    <h3>아이디 결과</h3>
+    <p><strong>아이디:</strong> <span id="username"></span></p>
+  </div>
+</div>
+
+<script>
+  function findId(name, phone) {
+    $.ajax({
+      url: '/findId',
+      type: 'GET',
+      data: {
+        name : name,
+        phone : phone
+      },
+      dataType: 'text',
+      success: function(response) {
+        $('#username').text(response);
+      },
+      error: function(error) {
+        alert('조회에 실패하였습니다.');
+      }
+    });
+
+  }
+</script>
+</body>
+</html>

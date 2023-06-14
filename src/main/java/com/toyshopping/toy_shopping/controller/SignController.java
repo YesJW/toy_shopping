@@ -5,6 +5,7 @@ import com.toyshopping.toy_shopping.data.dto.SignUpResultDto;
 import com.toyshopping.toy_shopping.data.entity.User;
 import com.toyshopping.toy_shopping.repository.UserRepository;
 import com.toyshopping.toy_shopping.service.SignService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.swagger.models.Response;
 import org.slf4j.Logger;
@@ -52,9 +53,10 @@ public class SignController {
             @ApiParam(value = "ID", required = true) @RequestParam("email") String id,
             @ApiParam(value = "비밀번호", required = true) @RequestParam("password") String password,
             @ApiParam(value = "이름", required = true) @RequestParam("name") String name,
+            @ApiParam(value = "전화번호", required = true) @RequestParam("phone") String phone,
             @ApiParam(value = "권한", required = true) @RequestParam("auth") String role) {
         LOGGER.info("[signUp] 회원가입을 수행합니다. id : {}, password : ****, name : {}, role : {}", id, name, role);
-        SignUpResultDto signUpResultDto = signService.signUp(id, password, name, role);
+        SignUpResultDto signUpResultDto = signService.signUp(id, password, name, phone, role);
 
         LOGGER.info("[signUp] 회원가입을 완료했습니다. id : {}", id);
         ModelAndView mav = new ModelAndView("login");
@@ -93,4 +95,6 @@ public class SignController {
         ModelAndView mav = new ModelAndView("login");
         return mav;
     }
+
+
 }
