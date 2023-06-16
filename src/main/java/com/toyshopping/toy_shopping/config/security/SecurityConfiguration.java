@@ -37,7 +37,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/sign-api/**", "/main","/getProductPage","/findId","/getFindIdPage").permitAll()
+                .antMatchers("/sign-api/**", "/main","/getProductPage","/findId","/findIdForReset","/getFindIdPage","/reset_password","/getPwPage","/search_user_pw","/getResetPwPage").permitAll()
                 .antMatchers("/cart","/addCart","/getCart","/removeFromCart").permitAll()
                 .antMatchers("/mypage","/mypage/sales").permitAll()
                 .antMatchers(HttpMethod.GET, "/mypage/user_detail").hasRole("ADMIN")
