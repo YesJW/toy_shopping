@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>문의 페이지</title>
+  <style>
+    /* 전체 페이지 스타일 */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* 문의 목록 스타일 */
+    .inquiry-list {
+      margin-bottom: 20px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+    }
+
+    .inquiry-list h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .inquiry-list ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .inquiry-list li {
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: #f7f7f7;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    /* 문의하기 버튼 스타일 */
+    .inquiry-button {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .inquiry-button button {
+      padding: 10px 20px;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .inquiry-button button:hover {
+      background-color: #555;
+    }
+
+    /* 문의 폼 팝업 스타일 */
+    .inquiry-form-popup {
+      display: none;
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 9999;
+    }
+
+    .inquiry-form-container {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      width: 300px;
+    }
+
+    .inquiry-form-container h2 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .inquiry-form-container form {
+      margin-top: 10px;
+    }
+
+    .inquiry-form-container label,
+    .inquiry-form-container input,
+    .inquiry-form-container textarea,
+    .inquiry-form-container button {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+
+    .inquiry-form-container textarea {
+      resize: none;
+    }
+
+    /* 추가적인 스타일링을 원하는 경우 여기에 CSS 코드를 추가하세요 */
+
+  </style>
+</head>
+<body>
+<div class="inquiry-list">
+  <h2>문의 목록</h2>
+  <ul id="inquiry-list-container">
+    <!-- 문의 목록을 JavaScript로 동적으로 생성합니다 -->
+  </ul>
+</div>
+
+<div class="inquiry-button">
+  <button onclick="openInquiryForm()">문의하기</button>
+</div>
+
+<div class="inquiry-form-popup" id="inquiry-popup">
+  <div class="inquiry-form-container">
+    <h2>문의하기</h2>
+    <form>
+      <label for="title">제목:</label>
+      <input type="text" id="title" name="title">
+
+      <label for="message">내용:</label>
+      <textarea id="message" name="message" rows="5"></textarea>
+
+      <button type="button" onclick="submitInquiry()">전송</button>
+      <button type="button" onclick="closeInquiryForm()">취소</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  function openInquiryForm() {
+    document.getElementById("inquiry-popup").style.display = "block";
+  }
+
+  function closeInquiryForm() {
+    document.getElementById("inquiry-popup").style.display = "none";
+  }
+
+  function submitInquiry() {
+    // 문의 내용을 전송하는 로직을 구현해주세요
+    // 서버로 데이터를 전송하고 성공 여부에 따라 적절한 처리를 수행합니다
+    // 예를 들면 AJAX를 사용하여 서버와 통신하는 코드를 작성할 수 있습니다
+
+    // 전송 후 팝업을 닫습니다
+    closeInquiryForm();
+  }
+</script>
+</body>
+</html>

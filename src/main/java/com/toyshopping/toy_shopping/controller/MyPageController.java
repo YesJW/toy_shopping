@@ -1,5 +1,6 @@
 package com.toyshopping.toy_shopping.controller;
 
+import com.toyshopping.toy_shopping.data.dto.UserDto;
 import com.toyshopping.toy_shopping.data.entity.User;
 import com.toyshopping.toy_shopping.repository.UserRepository;
 import io.swagger.annotations.ApiImplicitParam;
@@ -42,9 +43,12 @@ public class MyPageController {
     }
 
     @GetMapping("/user_detail")
-    public User getUser(Principal principal){
+    public UserDto getUser(Principal principal){
         LOGGER.info("[getUser] getUser 메서드 호출됨.");
-        User user = userRepository.getByUid(principal.getName());
-        return user;
+        UserDto userDto = new UserDto();
+        userDto.setUserId(userRepository.getByUid(principal.getName()).getUid());
+        userDto.setRoles(userRepository.getByUid(principal.getName()).getRoles());
+        userDto.setUserName(userRepository.getByUid(principal.getName()).getName());
+        return userDto;
     }
 }

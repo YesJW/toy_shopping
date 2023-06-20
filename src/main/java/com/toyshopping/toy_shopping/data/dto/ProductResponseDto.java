@@ -1,15 +1,13 @@
 package com.toyshopping.toy_shopping.data.dto;
 
 import com.toyshopping.toy_shopping.data.entity.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class ProductResponseDto {
 
     private Long numb;

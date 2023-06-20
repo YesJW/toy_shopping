@@ -21,8 +21,8 @@
         },
         success: function (data, status, xhr) {
           console.log('Success: ' + data);
-          document.getElementById('name').innerText = data.name;
-          document.getElementById('id').innerText = data.uid;
+          document.getElementById('name').innerText = data.userName;
+          document.getElementById('id').innerText = data.userId;
           document.getElementById('role').innerText = data.roles;
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -46,7 +46,7 @@
       <li><a href="/main">Home</a></li>
       <li><a href="/addProductPage">Shop</a></li>
       <li><a href="/cart">Cart</a></li>
-      <li><a href="">Contact</a></li>
+      <li><a href="/contactPage">Contact</a></li>
       <li>
         <a href="/sign-api/login" id="login-btn" sec:authorize="isAnonymous()">Login</a>
         <a href="" id="logout-btn" sec:authorize="isAuthenticated()">Logout</a>
