@@ -29,8 +29,14 @@ public class Contact {
     @Column(nullable = false)
     private String message;
 
+    @Column(nullable = false)
+    private Boolean answer;
+
+    @Column(nullable = false)
+    private String time;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_num")
     private User uno;
 
 }

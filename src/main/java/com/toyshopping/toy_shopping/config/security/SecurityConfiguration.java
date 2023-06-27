@@ -44,6 +44,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/updatePage", "/addProductPage", "/addProduct", "/getUserProducts", "/getAllProduct", "/productDetail", "/getProductDetail", "/deleteProduct", "/updateProject").permitAll()
                 .antMatchers("/contactPage").permitAll()
                 .antMatchers("**exception").permitAll()
+                .antMatchers("/contactPage","/getContact","/sendContact").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())

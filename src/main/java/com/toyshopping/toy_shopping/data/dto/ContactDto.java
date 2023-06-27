@@ -7,13 +7,15 @@ import javax.persistence.*;
 
 @Data
 public class ContactDto {
-    private Long num;
-
     private String name;
 
     private String title;
 
     private String message;
 
-    private User uno;
+    private Boolean ans;
+
+    private String to_Name;
+
+    private String time;
 }

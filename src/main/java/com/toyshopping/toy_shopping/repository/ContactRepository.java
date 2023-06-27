@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ContactRepository extends JpaRepository {
-    List<Contact> findAllByUno(Long id);
+public interface ContactRepository extends JpaRepository<Contact, Long> {
+    List<Contact> findAllByUno_id(Long id);
 
 }

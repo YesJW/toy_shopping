@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <title>문의 페이지</title>
+  <link rel="stylesheet" href="/css/style.css">
   <style>
     /* 전체 페이지 스타일 */
     body {
@@ -25,18 +27,29 @@
       margin-bottom: 10px;
     }
 
-    .inquiry-list ul {
-      list-style-type: none;
-      padding: 0;
-      margin: 0;
+    .inquiry-list table {
+      width: 70%;
+      border-collapse: collapse;
     }
 
-    .inquiry-list li {
-      margin-bottom: 10px;
+    .inquiry-list th,
+    .inquiry-list td {
       padding: 10px;
-      background-color: #f7f7f7;
       border: 1px solid #ddd;
-      border-radius: 5px;
+    }
+
+    .inquiry-list th {
+      background-color: #f7f7f7;
+    }
+
+    .inquiry-list .answered {
+      background-color: #e5f9e5;
+      color: #3c763d;
+    }
+
+    .inquiry-list .unanswered {
+      background-color: #f9e5e5;
+      color: #a94442;
     }
 
     /* 문의하기 버튼 스타일 */
@@ -107,13 +120,41 @@
     /* 추가적인 스타일링을 원하는 경우 여기에 CSS 코드를 추가하세요 */
 
   </style>
+  <script src="/js/headerjs.js"></script>
+  <script>
+    myHeader();
+  </script>
 </head>
 <body>
+<header>
+  <include src="header.html"></include>
+  <nav>
+    <ul>
+      <li><a href="/main">Home</a></li>
+      <li><a href="/addProductPage">Shop</a></li>
+      <li><a href="/cart">Cart</a></li>
+      <li><a href="/contactPage">Contact</a></li>
+      <li>
+        <a href="/sign-api/login" id="login-btn" sec:authorize="isAnonymous()">Login</a>
+        <a href="" id="logout-btn" sec:authorize="isAuthenticated()">Logout</a>
+      </li>
+      <li><a href="/sign-api/register" id="register-btn">Sign up</a></li>
+      <li><a href="/mypage" id ="mypage-btn">My Page</a></li>
+    </ul>
+  </nav>
+</header>
 <div class="inquiry-list">
   <h2>문의 목록</h2>
-  <ul id="inquiry-list-container">
-    <!-- 문의 목록을 JavaScript로 동적으로 생성합니다 -->
-  </ul>
+  <table id="inquiry-list-container">
+    <thead>
+    <tr>
+      <th>문의 제목</th>
+      <th>접수 날짜</th>
+      <th>해결 여부</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 </div>
 
 <div class="inquiry-button">
@@ -137,6 +178,61 @@
 </div>
 
 <script>
+  // 문의 목록을 가져오는 함수
+  function fetchContactList() {
+    // AJAX를 사용하여 서버로부터 문의 목록을 가져옵니다
+    $.ajax({
+      url: '/getContact',
+      type: 'GET',
+      dataType: 'json',
+      beforeSend: function (xhr){
+        const token = localStorage.getItem('X-AUTH-TOKEN');
+        xhr.setRequestHeader("X-AUTH-TOKEN", token);
+      },
+      success: function(data) {
+        // 가져온 문의 목록 데이터를 기반으로 동적으로 생성하여 화면에 표시합니다
+        var inquiryListContainer = document.getElementById('inquiry-list-container').getElementsByTagName('tbody')[0];
+        inquiryListContainer.innerHTML = '';
+
+        // 문의 목록을 반복해서 처리합니다
+        for (var i = 0; i < data.length; i++) {
+          var contact = data[i];
+
+          // 문의 목록 아이템을 생성하고 데이터를 채웁니다
+          var row = document.createElement('tr');
+
+          // 문의 제목
+          var titleCell = document.createElement('td');
+          titleCell.textContent = contact.title;
+          row.appendChild(titleCell);
+
+          // 문의 접수 날짜
+          var dateCell = document.createElement('td');
+          dateCell.textContent = contact.time;
+          row.appendChild(dateCell);
+
+          // 해결 여부
+          var statusCell = document.createElement('td');
+          if(contact.answer){
+            statusCell.textContent = '해결됨';
+          }
+          else {
+            statusCell.textContent = '해결중';
+          }
+          row.appendChild(statusCell);
+
+          // 생성한 문의 목록 아이템을 목록 컨테이너에 추가합니다
+          inquiryListContainer.appendChild(row);
+        }
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.log('Error: ' + errorThrown);
+      }
+    });
+  }
+  fetchContactList();
+
+
   function openInquiryForm() {
     document.getElementById("inquiry-popup").style.display = "block";
   }
@@ -146,12 +242,38 @@
   }
 
   function submitInquiry() {
-    // 문의 내용을 전송하는 로직을 구현해주세요
-    // 서버로 데이터를 전송하고 성공 여부에 따라 적절한 처리를 수행합니다
-    // 예를 들면 AJAX를 사용하여 서버와 통신하는 코드를 작성할 수 있습니다
+    var title = document.getElementById("title").value;
 
-    // 전송 후 팝업을 닫습니다
-    closeInquiryForm();
+    var message = document.getElementById("message").value;
+
+    // AJAX로 POST 요청 보내기
+    $.ajax({
+      url: "/sendContact",
+      type: "POST",
+      data: {
+        title: title,
+        message: message
+      },
+      dataType: "json",
+      beforeSend: function (xhr){
+        const token = localStorage.getItem('X-AUTH-TOKEN');
+        xhr.setRequestHeader("X-AUTH-TOKEN", token);
+      },
+      success: function(response) {
+        // 성공 처리 로직
+        console.log("문의가 성공적으로 전송되었습니다.");
+        // 성공 메시지 표시 등의 추가 작업 가능
+      },
+      error: function(xhr, status, error) {
+        // 오류 처리 로직
+        console.log("문의 전송에 실패하였습니다. 오류 메시지: " + error);
+        // 오류 메시지 표시 등의 추가 작업 가능
+      },
+      complete: function() {
+        // 요청 완료 후에 실행되는 로직
+        closeInquiryForm();
+      }
+    });
   }
 </script>
 </body>
