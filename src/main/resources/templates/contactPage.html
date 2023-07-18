@@ -17,7 +17,6 @@
     /* 문의 목록 스타일 */
     .inquiry-list {
       margin-bottom: 20px;
-      background-color: #fff;
       padding: 20px;
       border-radius: 5px;
     }
@@ -117,8 +116,9 @@
       resize: none;
     }
 
-    /* 추가적인 스타일링을 원하는 경우 여기에 CSS 코드를 추가하세요 */
 
+
+    /* 추가적인 스타일링을 원하는 경우 여기에 CSS 코드를 추가하세요 */
   </style>
   <script src="/js/headerjs.js"></script>
   <script>
@@ -133,13 +133,16 @@
       <li><a href="/main">Home</a></li>
       <li><a href="/addProductPage">Shop</a></li>
       <li><a href="/cart">Cart</a></li>
-      <li><a href="/contactPage">Contact</a></li>
+      <li>
+        <a href="/contactPage" sec:authorize="hasRole('ROLE_ADMIN')">Contact Admin</a>
+        <a href="/contactPage" sec:authorize="hasRole('ROLE_USER')">Contact User</a>
+      </li>
       <li>
         <a href="/sign-api/login" id="login-btn" sec:authorize="isAnonymous()">Login</a>
         <a href="" id="logout-btn" sec:authorize="isAuthenticated()">Logout</a>
       </li>
       <li><a href="/sign-api/register" id="register-btn">Sign up</a></li>
-      <li><a href="/mypage" id ="mypage-btn">My Page</a></li>
+      <li><a href="/mypage" id="mypage-btn">My Page</a></li>
     </ul>
   </nav>
 </header>
@@ -148,6 +151,8 @@
   <table id="inquiry-list-container">
     <thead>
     <tr>
+      <th>문의 번호</th>
+      <th>문의 고객</th>
       <th>문의 제목</th>
       <th>접수 날짜</th>
       <th>해결 여부</th>
@@ -177,19 +182,21 @@
   </div>
 </div>
 
+
 <script>
   // 문의 목록을 가져오는 함수
   function fetchContactList() {
     // AJAX를 사용하여 서버로부터 문의 목록을 가져옵니다
     $.ajax({
-      url: '/getContact',
+      url: '/getAllContact',
+      // url: '/getAdminContact',
       type: 'GET',
       dataType: 'json',
-      beforeSend: function (xhr){
+      beforeSend: function (xhr) {
         const token = localStorage.getItem('X-AUTH-TOKEN');
         xhr.setRequestHeader("X-AUTH-TOKEN", token);
       },
-      success: function(data) {
+      success: function (data) {
         // 가져온 문의 목록 데이터를 기반으로 동적으로 생성하여 화면에 표시합니다
         var inquiryListContainer = document.getElementById('inquiry-list-container').getElementsByTagName('tbody')[0];
         inquiryListContainer.innerHTML = '';
@@ -197,13 +204,26 @@
         // 문의 목록을 반복해서 처리합니다
         for (var i = 0; i < data.length; i++) {
           var contact = data[i];
-
           // 문의 목록 아이템을 생성하고 데이터를 채웁니다
           var row = document.createElement('tr');
+
+          // 문의 번호
+          var contactNum = document.createElement('td');
+          contactNum.textContent = contact.num;
+          row.appendChild(contactNum);
+
+          var name = document.createElement('td');
+          name.textContent = contact.name;
+          row.appendChild(name);
 
           // 문의 제목
           var titleCell = document.createElement('td');
           titleCell.textContent = contact.title;
+          (function (contact) { // IIFE로 새로운 스코프 생성
+            titleCell.addEventListener('click', function () {
+              openInquiryDetail(contact);
+            });
+          })(contact); // 현재 contact 값을 전달
           row.appendChild(titleCell);
 
           // 문의 접수 날짜
@@ -213,65 +233,75 @@
 
           // 해결 여부
           var statusCell = document.createElement('td');
-          if(contact.answer){
-            statusCell.textContent = '해결됨';
+          if (contact.ans) {
+            statusCell.textContent = "해결됨";
+            statusCell.style.color = "#3c763d";
+          } else {
+            statusCell.textContent = "해결중";
+            statusCell.style.color = "#a94442";
           }
-          else {
-            statusCell.textContent = '해결중';
-          }
+
           row.appendChild(statusCell);
 
           // 생성한 문의 목록 아이템을 목록 컨테이너에 추가합니다
           inquiryListContainer.appendChild(row);
         }
       },
-      error: function(jqXHR, textStatus, errorThrown) {
+      error: function (jqXHR, textStatus, errorThrown) {
         console.log('Error: ' + errorThrown);
       }
     });
   }
   fetchContactList();
 
-
   function openInquiryForm() {
     document.getElementById("inquiry-popup").style.display = "block";
+
+    // 폼 필드의 값을 초기화합니다
+    document.getElementById("title").value = "";
+    document.getElementById("message").value = "";
   }
+
 
   function closeInquiryForm() {
     document.getElementById("inquiry-popup").style.display = "none";
   }
 
+  function openInquiryDetail(contact) {
+    // 문의 상세 내용을 표시하는 페이지로 이동
+    var url = "/contactAns?num=" + contact.num;
+    window.location.href = url;
+  }
+
+  function closeInquiryDetail() {
+    document.getElementById("inquiry-detail-popup").style.display = "none";
+  }
+
   function submitInquiry() {
     var title = document.getElementById("title").value;
-
     var message = document.getElementById("message").value;
 
-    // AJAX로 POST 요청 보내기
+    // AJAX를 사용하여 서버로 문의를 전송합니다
     $.ajax({
-      url: "/sendContact",
-      type: "POST",
+      url: '/sendContact',
+      type: 'POST',
+      dataType: 'json',
       data: {
         title: title,
         message: message
       },
-      dataType: "json",
-      beforeSend: function (xhr){
+      beforeSend: function (xhr) {
         const token = localStorage.getItem('X-AUTH-TOKEN');
         xhr.setRequestHeader("X-AUTH-TOKEN", token);
       },
-      success: function(response) {
-        // 성공 처리 로직
-        console.log("문의가 성공적으로 전송되었습니다.");
-        // 성공 메시지 표시 등의 추가 작업 가능
-      },
-      error: function(xhr, status, error) {
-        // 오류 처리 로직
-        console.log("문의 전송에 실패하였습니다. 오류 메시지: " + error);
-        // 오류 메시지 표시 등의 추가 작업 가능
-      },
-      complete: function() {
-        // 요청 완료 후에 실행되는 로직
+      success: function (data) {
+        // 문의 전송 후 문의 목록을 갱신합니다
+        fetchContactList();
+        // 문의 폼을 닫습니다
         closeInquiryForm();
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log('Error: ' + errorThrown);
       }
     });
   }

@@ -1,19 +1,6 @@
 function myHeader() {
     $(document).ready(function () {
-        // 페이지 로드 시 실행되는 코드
-        var token = localStorage.getItem('X-AUTH-TOKEN'); // 로컬 스토리지에서 토큰 가져오기
-
-        $.ajax({
-            url: '/getProductPage',
-            type: 'GET',
-            beforeSend: myFunction,
-            success: function (data, status, xhr) {
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-            }
-        });
-
-
+        const userToken = localStorage.getItem('X-AUTH-TOKEN'); // localStorage에서 토큰을 가져옴
         $('#login-btn').click(function () {
             $.ajax({
                 url: '/sign-api/login',
@@ -52,7 +39,7 @@ function myHeader() {
                 url: '/mypage',
                 type: 'GET',
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader("X-AUTH-TOKEN", token);
+                    xhr.setRequestHeader("X-AUTH-TOKEN", userToken);
 
                 },
                 success: function (data, status, xhr) {
@@ -61,7 +48,7 @@ function myHeader() {
                 error: function (jqXHR, textStatus, errorThrown) {
                 }
             });
-            const userToken = localStorage.getItem('X-AUTH-TOKEN'); // localStorage에서 토큰을 가져옴
+
             fetch('/mypage', {
                 headers: {
                     'content-type': 'application/json',
@@ -74,31 +61,26 @@ function myHeader() {
                 });
 
         });
-
-
-        if (token) {
-            $('#login-btn').hide();
-            $('#register-btn').hide();
-            $('#logout-btn').show();
-            $('#mypage-btn').show();
-        } else {
-            $('#login-btn').show();
-            $('#register-btn').show();
-            $('#logout-btn').hide();
-            $('#mypage-btn').hide();
-        }
+        // if (userToken) {
+        //     $('#login-btn').hide();
+        //     $('#register-btn').hide();
+        //     $('#logout-btn').show();
+        //     $('#mypage-btn').show();
+        // } else {
+        //     $('#login-btn').show();
+        //     $('#register-btn').show();
+        //     $('#logout-btn').hide();
+        //     $('#mypage-btn').hide();
+        // }
 
         // 로그아웃 버튼 클릭 시
         $('#logout-btn').click(function () {
             localStorage.removeItem('X-AUTH-TOKEN');
-            $('#login-btn').show();
-            $('#register-btn').show();
-            $('#logout-btn').hide();
-            $('#mypage-btn').hide();
+            // $('#login-btn').show();
+            // $('#register-btn').show();
+            // $('#logout-btn').hide();
+            // $('#mypage-btn').hide();
         });
 
-        function myFunction(xhr) {
-            xhr.setRequestHeader("X-AUTH-TOKEN", token);
-        }
     });
 }

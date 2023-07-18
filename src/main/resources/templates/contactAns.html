@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>문의 답변</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      var answer = false;
+      // 페이지 로드 시 실행되는 코드
+      var token = localStorage.getItem('X-AUTH-TOKEN'); // 로컬 스토리지에서 토큰 가져오기
+      var num = getNUmFromURL('num'); // URL에서 num 매개변수 값을 추출
+      // AJAX 요청 설정
+      $.ajax({
+        url: '/getContact',
+        type: 'GET',
+        data: {num : num},
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader('X-AUTH-TOKEN', token);
+        },
+        success: function(data, status, xhr) {
+          answer = data.ans;
+          $('#contact-num').text(data.num); // 문의 번호 채우기
+          $('#contact-name').text(data.name); // 문의 번호 채우기
+          $('#contact-title').text(data.title); // 문의 제목 채우기
+          $('#contact-message').text(data.message); // 문의 내용 채우기
+          if(data.ans){
+            $('#contact-sender').text(data.to_Name);
+            $('#contact-answer').text(data.reply);
+          }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          // 오류 처리
+        }
+      });
+      $.ajax({
+        url: '/mypage/user_detail',
+        type: 'GET',
+        beforeSend: function myFunction(xhr) {
+          const token = localStorage.getItem('X-AUTH-TOKEN'); // localStorage에서 토큰을 가져옴
+          xhr.setRequestHeader("X-AUTH-TOKEN", token);
+        },
+        success: function (data){
+          if(data.roles.includes('ROLE_ADMIN') && answer === false){
+            $('#contact-answer-form').show();
+            $('#contact-sender').text(data.sender);
+            $('#submit-answer').click(function() {
+              var answer = $('#answer-input').val();
+              // AJAX를 사용하여 답변 전송
+              $.ajax({
+                url: '/replyContact',
+                type: 'PUT',
+                data: {num : num, message: answer},
+                beforeSend: function(xhr) {
+                  xhr.setRequestHeader('X-AUTH-TOKEN', token);
+                },
+                success: function(response) {
+                  answer = true;
+                  location.reload()
+                  // 답변 전송 성공 시 처리
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                  // 오류 처리
+                }
+              });
+            });
+          }
+          else{
+            console.log(data.roles);
+            $('#contact-answer-form').hide();
+          }
+
+        },
+      })
+    });
+    function getNUmFromURL() {
+      var urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('num');
+    }
+  </script>
+  <style>
+    /* 답변 페이지 스타일 */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
+      margin: 0;
+      padding: 0;
+    }
+
+    .answer-container {
+      margin: 20px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+    }
+
+    .answer-container h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .answer-container p {
+      margin-bottom: 10px;
+    }
+
+    .answer-container .separator {
+      border-top: 1px solid #ddd;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+<div class="answer-container">
+  <h2>문의 답변</h2>
+  <p><strong>문의 번호:</strong> <span id="contact-num"></span></p>
+  <p><strong>문의자: </strong> <span id="contact-name"></span></p>
+  <p><strong>문의 제목:</strong> <span id="contact-title"></span></p>
+  <p><strong>문의 내용:</strong></p>
+  <p id="contact-message"></p>
+
+  <div class="separator"></div>
+
+  <p><strong>보낸 사람:</strong> <span id="contact-sender"></span></p>
+  <p><strong>답변 내용:</strong></p>
+  <p id="contact-answer"></p>
+
+  <div id="contact-answer-form" style="display: none">
+    <textarea id="answer-input" placeholder="답변을 입력해주세요"></textarea>
+    <button id="submit-answer">답변하기</button>
+  </div>
+</div>
+</body>
+</html>

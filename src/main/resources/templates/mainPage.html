@@ -25,7 +25,7 @@
       <li><a href="/contactPage">Contact</a></li>
       <li>
         <a href="/sign-api/login" id="login-btn" sec:authorize="isAnonymous()">Login</a>
-        <a href="" id="logout-btn" sec:authorize="isAuthenticated()">Logout</a>
+        <a href="/main" id="logout-btn" sec:authorize="isAuthenticated()">Logout</a>
       </li>
       <li><a href="/sign-api/register" id="register-btn">Sign up</a></li>
       <li><a href="/mypage" id ="mypage-btn">My Page</a></li>
@@ -34,16 +34,18 @@
 </header>
 
 <main>
-  <section class="banner">
+  <section class="banner" >
     <h1>Welcome to our Shopping Mall</h1>
     <p>Shop the latest trends and styles.</p>
     <a href="/getProductPage" class="btn">Shop Now</a>
   </section>
   <section class="about-us">
+
     <h2>About Us</h2>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eget fringilla ipsum. Nam ut lacinia ex, non semper ipsum. Fusce elementum eleifend nunc, eu vehicula leo posuere id. Nunc congue, erat vel vulputate vestibulum, dolor leo dignissim erat, eget vulputate metus felis vel mauris.</p>
+    <p>스프링 부트를 공부하고 처음으로 만드는 쇼핑몰 토이 프로젝트</p>
     <a href="#" class="btn">Learn More</a>
   </section>
+
 </main>
 
 <footer>

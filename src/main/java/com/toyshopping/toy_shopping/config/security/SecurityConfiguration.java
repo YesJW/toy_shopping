@@ -8,11 +8,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -33,8 +35,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         httpSecurity.httpBasic().disable()
                 .csrf().disable()
                 .sessionManagement()
-                .sessionCreationPolicy(
-                        SessionCreationPolicy.STATELESS)
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
                 .antMatchers("/sign-api/**", "/main", "/getProductPage", "/findId", "/findIdForReset", "/getFindIdPage", "/reset_password", "/getPwPage", "/search_user_pw", "/getResetPwPage").permitAll()
@@ -42,9 +43,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/mypage", "/mypage/sales").permitAll()
                 .antMatchers(HttpMethod.GET, "/mypage/user_detail").permitAll()
                 .antMatchers("/updatePage", "/addProductPage", "/addProduct", "/getUserProducts", "/getAllProduct", "/productDetail", "/getProductDetail", "/deleteProduct", "/updateProject").permitAll()
-                .antMatchers("/contactPage").permitAll()
                 .antMatchers("**exception").permitAll()
-                .antMatchers("/contactPage","/getContact","/sendContact").permitAll()
+                .antMatchers("/contactPage").permitAll()
+                .antMatchers("/getAllContact","/getContact","/contactAns","/sendContact","/getAdminContact","/replyContact").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
@@ -57,7 +58,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity webSecurity) {
         webSecurity.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**", "/sign-api/exception"
-        ,"/css/**", "/js/**", "/images/**", "/lib/**","/sign-api/**","/main");
+        ,"/css/**", "/js/**", "/images/**", "/lib/**");
 
     }
 }

@@ -21,7 +21,7 @@ public class Contact {
     private String name;
 
     @Column(nullable = false)
-    private String to_name;
+    private String toName;
 
     @Column(nullable = false)
     private String title;
@@ -29,11 +29,17 @@ public class Contact {
     @Column(nullable = false)
     private String message;
 
+    @Column
+    private String reply;
+
     @Column(nullable = false)
     private Boolean answer;
 
     @Column(nullable = false)
     private String time;
+
+    @Column
+    private String reply_time;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_num")
