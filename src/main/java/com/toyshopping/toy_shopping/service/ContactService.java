@@ -12,9 +12,6 @@ public interface ContactService {
 
     ContactDto getContact(Long num);
     ContactDto saveContact(ContactDto contactDto);
-
-    List<ContactAdminDto> getAdminContact(String name);
-
     ContactReplyDto replyContact(Long number, String message);
 
 
