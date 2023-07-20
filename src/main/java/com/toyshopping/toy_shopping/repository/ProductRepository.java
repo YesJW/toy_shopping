@@ -7,4 +7,14 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAllByUno_id(Long user_no);
+
+    List<Product> findAllByNameContainingOrderByNameDesc(String name);
+
+    List<Product> findAllByNameContainingOrderByPriceDesc(String name);
+
+    List<Product> findALlByNameContainingOrderByStockDesc(String name);
+
+    List<Product> findAllByNameContainingOrderByPriceAsc(String name);
+
+    List<Product> findALlByNameContainingOrderByStockAsc(String name);
 }

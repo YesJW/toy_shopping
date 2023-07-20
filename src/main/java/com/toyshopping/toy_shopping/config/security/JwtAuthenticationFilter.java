@@ -33,7 +33,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 Authentication authentication = jwtTokenProvider.getAuthentication(token);
                 response.setHeader("X-AUTH-TOKEN", token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                response.addHeader("X-AUTH-TOKEN",token);
                 LOGGER.info("[doFilterInternal] token 값 유효성 체크 완료");
             }
         } catch (JwtException exception) {

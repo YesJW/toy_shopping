@@ -20,4 +20,7 @@ public interface ProductService {
 
     void deleteProduct(Long number) throws Exception;
 
+    List<ProductResponseDto> getSearchProduct(String keyword, String sort);
+
+
 }

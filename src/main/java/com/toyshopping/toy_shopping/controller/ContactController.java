@@ -21,13 +21,11 @@ import java.util.List;
 public class ContactController {
 
     private static Logger LOGGER = LoggerFactory.getLogger(ContactController.class);
-    private ContactRepository contactRepository;
     private ContactService contactService;
 
     @Autowired
-    public ContactController(ContactRepository contactRepository, ContactService contactService) {
+    public ContactController(ContactService contactService) {
         this.contactService = contactService;
-        this.contactRepository = contactRepository;
     }
 
     @GetMapping(value = "/contactPage")

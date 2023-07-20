@@ -61,26 +61,47 @@ function myHeader() {
                 });
 
         });
-        // if (userToken) {
-        //     $('#login-btn').hide();
-        //     $('#register-btn').hide();
-        //     $('#logout-btn').show();
-        //     $('#mypage-btn').show();
-        // } else {
-        //     $('#login-btn').show();
-        //     $('#register-btn').show();
-        //     $('#logout-btn').hide();
-        //     $('#mypage-btn').hide();
-        // }
+        if (userToken) {
+            $('#login-btn').hide();
+            $('#register-btn').hide();
+            $('#logout-btn').show();
+            $('#mypage-btn').show();
+        } else {
+            $('#login-btn').show();
+            $('#register-btn').show();
+            $('#logout-btn').hide();
+            $('#mypage-btn').hide();
+        }
 
         // 로그아웃 버튼 클릭 시
         $('#logout-btn').click(function () {
             localStorage.removeItem('X-AUTH-TOKEN');
-            // $('#login-btn').show();
-            // $('#register-btn').show();
-            // $('#logout-btn').hide();
-            // $('#mypage-btn').hide();
+            $('#login-btn').show();
+            $('#register-btn').show();
+            $('#logout-btn').hide();
+            $('#mypage-btn').hide();
         });
 
     });
+
+
+
+}
+
+function submitSearchForm() {
+    var searchKeyword = document.getElementById("search-form").elements["q"].value;
+    if (searchKeyword.trim() !== "") {
+        var form = document.createElement("form");
+        form.action = "/searchPage";
+        form.method = "GET";
+
+        var input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "q";
+        input.value = searchKeyword;
+        form.appendChild(input);
+
+        document.body.appendChild(form);
+        form.submit();
+    }
 }

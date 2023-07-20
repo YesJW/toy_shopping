@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Shopping Mall - Search Results</title>
+  <link rel="stylesheet" href="/css/productStyle.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="/js/headerjs.js"></script>
+  <script>
+    myHeader();
+  </script>
+  <style>
+    /* 검색 결과 페이지 스타일 */
+    main {
+      padding: 20px;
+    }
+
+    #search-info {
+      margin-bottom: 20px;
+    }
+
+    .product-list {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .product {
+      width: 300px;
+      margin: 20px;
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-image {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .product-image img {
+      max-width: 100%;
+      max-height: 200px;
+      object-fit: contain;
+    }
+
+    .product-name {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .product-price {
+      color: #e91e63;
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .product-stock {
+      color: #4caf50;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .product-description {
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+    }
+
+    .product-action {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .product-action button {
+      background-color: #e91e63;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .product-action button:hover {
+      background-color: #d81c60;
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <include src="header.html"></include>
+  <nav>
+    <ul>
+      <li><a href="/main">Home</a></li>
+      <li><a href="/addProductPage">Shop</a></li>
+      <li><a href="/cart">Cart</a></li>
+      <li><a href="/contactPage">Contact</a></li>
+      <li>
+        <a href="/sign-api/login" id="login-btn">Login</a>
+        <a href="" id="logout-btn">Logout</a>
+      </li>
+      <li><a href="/sign-api/register" id="register-btn">Sign up</a></li>
+      <li><a href="/mypage" id="mypage-btn">My Page</a></li>
+    </ul>
+  </nav>
+</header>
+<main>
+  <div id="search-info">
+    <h2>Search Results for: <span id="search-keyword"></span></h2>
+    <label for="sort-order">Sort by:</label>
+    <select id="sort-order">
+      <option value="이름순">이름순</option>
+      <option value="높은 가격순">높은 가격순</option>
+      <option value="낮은 가격순">낮은 가격순</option>
+      <option value="갯수 많은순">갯수 많은순</option>
+      <option value="갯수 적은순">갯수 적은순</option>
+    </select>
+  </div>
+  <div class="product-list" id="product-list"></div>
+</main>
+
+<footer>
+  <p>&copy; 2023 My Company. All rights reserved.</p>
+</footer>
+
+<script>
+  $(document).ready(function () {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const searchKeyword = urlParams.get('q');
+
+    // 검색어를 페이지에 표시
+    $('#search-keyword').text(searchKeyword);
+
+    // 검색 결과를 불러오는 AJAX 요청
+    $.ajax({
+      url: "/searchProducts",
+      type: "GET",
+      data: { q: searchKeyword },
+      success: function (data, status, xhr) {
+        if (data.length === 0) {
+          $('#product-list').append('<p>No products found</p>');
+        } else {
+          data.forEach(function (product) {
+            $('#product-list').append(
+                    '<div class="product">' +
+                    '<div class="product-image">' +
+                    // productHtml += '<img src="' + products[i].imageUrl + '" alt="Product Image">';
+                    '</div>' +
+                    '<div class="product-info">' +
+                    '<h3 class="product-name">' + product.name + '</h3>' +
+                    '<p class="product-stock">' + '남은 갯수: ' + product.stock + '</p>' +
+                    '<p class="product-price">$' + product.price + '</p>' +
+                    '<button class="add-to-cart-button" data-product-id="' + product.numb + '">Add to Cart</button>' + // data-product-id에 고유한 값을 부여
+                    '</div>' +
+                    '</div>'
+            ).find('.product').last().click(function () {
+              var productId = $(this).find('.add-to-cart-button').data('product-id');
+              getProductDetail(productId);
+            });
+          });
+        }
+      },
+      error: function () {
+        alert("Error loading products.");
+      }
+    });
+    $('#sort-order').change(function () {
+      const sortOrder = $(this).val();
+      $.ajax({
+        url: "/searchProducts",
+        type: "GET",
+        data: { q: searchKeyword, sort: sortOrder }, // 검색어와 정렬 기준을 함께 전달
+        success: function (data, status, xhr) {
+          updateProductList(data);
+        },
+        error: function () {
+          alert("Error loading products.");
+        }
+      });
+    });
+    function updateProductList(products) {
+      const productList = $('#product-list');
+      productList.empty(); // 기존 상품 목록 비우기
+
+      if (products.length === 0) {
+        productList.append('<div class="product">No products found</div>');
+      } else {
+        console.log(products)
+        products.forEach(function (product) {
+          productList.append(
+                  '<div class="product">' +
+                  '<div class="product-image">' +
+                  // 상품 이미지 추가
+                  '</div>' +
+                  '<div class="product-info">' +
+                  '<h3 class="product-name">' + product.name + '</h3>' +
+                  '<p class="product-stock">' + '남은 갯수: ' + product.stock + '</p>' +
+                  '<p class="product-price">$' + product.price + '</p>' +
+                  '<button class="add-to-cart-button" data-product-id="' + product.numb + '">Add to Cart</button>' +
+                  '</div>' +
+                  '</div>'
+          ).find('.product').last().click(function () {
+            var productId = $(this).find('.add-to-cart-button').data('product-id');
+            getProductDetail(productId);
+          });
+        });
+      }
+    }
+  });
+
+
+  $(document).on('click', '.add-to-cart-button', function () {
+    // 선택한 상품 정보 가져오기
+    var productInfo = $(this).closest('.product').find('.product-info');
+    var productName = productInfo.find('.product-name').text();
+    var productStockText = productInfo.find('.product-stock').text();
+    var productStock = parseInt(productStockText.match(/\d+/)[0]);
+    var productPriceText = productInfo.find('.product-price').text();
+    var productPrice = parseInt(productPriceText.match(/\d+/)[0]);
+    var num2 = $(this).data('product-id');
+
+    // 상품 정보를 서버로 전송하기 위한 AJAX 요청 설정
+    $.ajax({
+      url: '/addCart',
+      type: 'POST',
+      data: {
+        name: productName,
+        price: productPrice,
+        pnum: num2, // 상품 번호
+        stock: productStock, // 상품 수량
+        uno: num2 // 사용자 번호
+      },
+      dataType: 'json',
+      beforeSend: function (xhr) {
+        const token = localStorage.getItem('X-AUTH-TOKEN');
+        xhr.setRequestHeader("X-AUTH-TOKEN", token);
+      },
+      success: function (response) {
+        alert('상품이 장바구니에 추가되었습니다.');
+      },
+      error: function (error) {
+        alert('상품 추가 중 오류가 발생했습니다.');
+      }
+    });
+  });
+
+  function getProductDetail(productId) {
+    $.ajax({
+      url: '/productDetail',
+      type: 'GET',
+      data: { id: productId },
+      dataType: 'html',
+      beforeSend: function (xhr) {
+        const token = localStorage.getItem('X-AUTH-TOKEN');
+        xhr.setRequestHeader("X-AUTH-TOKEN", token);
+      },
+      success: function (product) {
+        // 상세 페이지로 이동
+        window.location.href = '/productDetail?id=' + productId;
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log('Error: ' + errorThrown);
+      }
+    });
+  }
+</script>
+</body>
+
+</html>

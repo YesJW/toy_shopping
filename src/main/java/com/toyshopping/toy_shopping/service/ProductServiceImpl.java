@@ -118,4 +118,39 @@ public class ProductServiceImpl implements ProductService {
     public void deleteProduct(Long number) throws Exception {
         productRepository.deleteById(number);
     }
+
+    @Override
+    public List<ProductResponseDto> getSearchProduct(String keyword, String sort) {
+        List<Product> products = null;
+        switch (sort) {
+            case "이름순":
+                products = productRepository.findAllByNameContainingOrderByNameDesc(keyword);
+                break;
+            case "높은 가격순":
+                products = productRepository.findAllByNameContainingOrderByPriceDesc(keyword);
+                break;
+            case "갯수 많은순":
+                products = productRepository.findALlByNameContainingOrderByStockDesc(keyword);
+                break;
+            case "낮은 가격순":
+                products = productRepository.findAllByNameContainingOrderByPriceAsc(keyword);
+                break;
+            case "갯수 적은순":
+                products = productRepository.findALlByNameContainingOrderByStockAsc(keyword);
+                break;
+            default: break;
+        }
+        List<ProductResponseDto> productResponseDtos = new ArrayList<>();
+        for (Product product : products) {
+            ProductResponseDto productResponseDto = new ProductResponseDto();
+            productResponseDto.setNumb(product.getNumb());
+            productResponseDto.setStock(product.getStock());
+            productResponseDto.setName(product.getName());
+            productResponseDto.setPrice(product.getPrice());
+            productResponseDto.setUser_no(product.getUno().getId());
+
+            productResponseDtos.add(productResponseDto);
+        }
+        return productResponseDtos;
+    }
 }

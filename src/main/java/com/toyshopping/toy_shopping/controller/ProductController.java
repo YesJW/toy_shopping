@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import lombok.Getter;
 import lombok.Setter;
+import org.dom4j.rule.Mode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +92,6 @@ public class ProductController {
     @GetMapping(value = "/getProductDetail")
     public ProductResponseDto getProductDetail(@RequestParam("id") Long productId) {
         LOGGER.info("[getProductDetailGetMethod] getProductDetail 메서드 호출됨.");
-        // productId에 해당하는 상품 정보를 데이터베이스나 다른 저장소에서 가져온다고 가정
         ProductResponseDto product = productService.getProduct(productId);
 
         return product;
@@ -110,4 +110,19 @@ public class ProductController {
         LOGGER.info("[updateProductGetMethod] updateProduct 메서드 호출됨.");
         return mav;
     }
+
+    @GetMapping(value = "/searchPage")
+    public ModelAndView searchProductPage(){
+        ModelAndView mav = new ModelAndView("searchPage");
+        return mav;
+    }
+
+    @GetMapping(value = "/searchProducts")
+    public ResponseEntity<List<ProductResponseDto>> searchProduct(@RequestParam("q") String keyword, @RequestParam(defaultValue = "이름순",value = "sort") String sortOrder) {
+
+        LOGGER.info("[ProductController] searchProducts 메서드 호출됨.");
+        List<ProductResponseDto> searchResult = productService.getSearchProduct(keyword,sortOrder);
+        return ResponseEntity.status(HttpStatus.OK).body(searchResult);
+    }
+
 }

@@ -85,6 +85,22 @@ public class ContactServiceImpl implements ContactService{
         return responseContactDto;
     }
 
+    @Override
+    public List<ContactAdminDto> getAdminContact(String name) {
+        List<Contact> contacts = contactRepository.findAllByToName("admin");
+        List<ContactAdminDto> contactAdminDtos = new ArrayList<>();
+        for (Contact c : contacts) {
+            ContactAdminDto contactAdminDto = new ContactAdminDto();
+            contactAdminDto.setNum(c.getNum());
+            contactAdminDto.setTitle(c.getTitle());
+            contactAdminDto.setMessage(c.getMessage());
+            contactAdminDto.setName(c.getName());
+            contactAdminDto.setTime(c.getTime());
+            contactAdminDto.setAns(c.getAnswer());
+            contactAdminDtos.add(contactAdminDto);
+        }
+        return contactAdminDtos;
+    }
 
     @Override
     public ContactReplyDto replyContact(Long number, String message) {

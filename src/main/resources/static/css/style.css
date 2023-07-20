@@ -174,5 +174,29 @@ footer {
     padding: 10px 20px;
     text-decoration: none;
 }
+header {
+    position: relative; /* header를 position 속성이 relative인 상태로 지정합니다. */
+}
 
+#search-li {
+    position: absolute; /* search-form을 position 속성이 absolute인 상태로 지정합니다. */
+    top: 50%; /* search-form을 수직으로 중앙 정렬하기 위해 top 값을 50%로 지정합니다. */
+    right: 10px; /* search-form을 오른쪽에서 10px의 간격으로 위치시킵니다. */
+    transform: translateY(-50%); /* search-form을 수직으로 정중앙에 위치시킵니다. */
+}
+
+#search-form input[type="text"] {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#search-form button {
+    padding: 5px 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+
+}
 
