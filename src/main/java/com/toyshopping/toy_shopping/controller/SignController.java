@@ -53,8 +53,8 @@ public class SignController {
             @ApiParam(value = "ID", required = true) @RequestParam("email") String id,
             @ApiParam(value = "비밀번호", required = true) @RequestParam("password") String password,
             @ApiParam(value = "이름", required = true) @RequestParam("name") String name,
-            @ApiParam(value = "전화번호", required = true) @RequestParam("phone") String phone,
-            @ApiParam(value = "권한", required = true) @RequestParam("auth") String role) {
+            @ApiParam(value = "전화번호", required = true) @RequestParam("phone") String phone) {
+        String role = "USER";
         LOGGER.info("[signUp] 회원가입을 수행합니다. id : {}, password : ****, name : {}, role : {}", id, name, role);
         SignUpResultDto signUpResultDto = signService.signUp(id, password, name, phone, role);
 
@@ -79,7 +79,7 @@ public class SignController {
         Map<String, String> map = new HashMap<>();
         map.put("error type", httpStatus.getReasonPhrase());
         map.put("code", "400");
-        map.put("message", "에러 발생");
+        map.put("message", "로그인 실패");
 
         return new ResponseEntity<>(map, responseHeaders, httpStatus);
     }

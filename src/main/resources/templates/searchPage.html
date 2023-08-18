@@ -71,12 +71,6 @@
       font-size: 0.9rem;
     }
 
-    .product-action {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
     .product-action button {
       background-color: #e91e63;
       color: white;
@@ -152,7 +146,7 @@
             $('#product-list').append(
                     '<div class="product">' +
                     '<div class="product-image">' +
-                    // productHtml += '<img src="' + products[i].imageUrl + '" alt="Product Image">';
+                    '<img src="' + product.imgPath + '" alt="Product Image">'+
                     '</div>' +
                     '<div class="product-info">' +
                     '<h3 class="product-name">' + product.name + '</h3>' +
