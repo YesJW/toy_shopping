@@ -10,9 +10,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -54,21 +58,37 @@ public class ProductServiceImpl implements ProductService {
         productResponseDto.setUser_no(product.getUno().getId());
         productResponseDto.setPrice(product.getPrice());
         productResponseDto.setNumb(product.getNumb());
+        productResponseDto.setImgName(product.getImgName());
+        productResponseDto.setImgPath(product.getImgPath());
 
         return productResponseDto;
 
     }
 
     @Override
-    public ProductResponseDto saveProduct(ProductDto productDto) {
-
+    public ProductResponseDto saveProduct(ProductDto productDto, MultipartFile imgFile) throws IOException {
         User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         LOGGER.info("[UserNo 가져오기] text : {}", user.getId());
+        String imgOriName = imgFile.getOriginalFilename();
+        String imgName = "";
+
+        String path = System.getProperty("user.dir") + "/src/main/resources/static/images/";
+
+        UUID uuid = UUID.randomUUID();
+
+        imgName = uuid + "_" + imgOriName;
+
+        File saveImage = new File(path, imgName);
+
+        imgFile.transferTo(saveImage);
+
         Product product = new Product();
         product.setName(productDto.getName());
         product.setPrice(productDto.getPrice());
         product.setStock(productDto.getStock());
         product.setUno(user);
+        product.setImgName(imgName);
+        product.setImgPath("/images/" + imgName);
         Product saveProduct = productRepository.save(product);
 
         ProductResponseDto productResponseDto = new ProductResponseDto();
@@ -108,6 +128,8 @@ public class ProductServiceImpl implements ProductService {
             productResponseDto.setPrice(p.getPrice());
             productResponseDto.setStock(p.getStock());
             productResponseDto.setUser_no(p.getUno().getId());
+            productResponseDto.setImgName(p.getImgName());
+            productResponseDto.setImgPath(p.getImgPath());
             productResponseDtos.add(productResponseDto);
         }
 

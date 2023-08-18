@@ -32,4 +32,10 @@ public class Product {
     @JoinColumn(name = "user_no")
     private User uno;
 
+    @Column(nullable = false)
+    private String imgName;
+
+    @Column(nullable = false)
+    private String imgPath;
+
 }

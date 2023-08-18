@@ -37,78 +37,8 @@ main {
     padding: 20px;
 }
 
-.product-list {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.product {
-    width: 300px;
-    margin: 20px;
-    border: 1px solid #ddd;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-}
-
-.product-image {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.product-image img {
-    max-width: 100%;
-    max-height: 200px;
-    object-fit: contain;
-}
-
-.product-name {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.product-price {
-    color: #e91e63;
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.product-stock {
-    color: #4caf50;
-    font-size: 0.9rem;
-    margin-bottom: 10px;
-}
-
-.product-description {
-    margin-bottom: 10px;
-    font-size: 0.9rem;
-}
-
-.product-action {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.product-action button {
-    background-color: #e91e63;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.product-action button:hover {
-    background-color: #d81c60;
-}
-
 footer {
-    background-color: #f2f2f2;
+    background-color: #F8F8F8;
     color: #555;
     padding: 20px;
     position: fixed;
@@ -151,8 +81,12 @@ footer {
 /* 소개 */
 .about-us {
     background-color: #F8F8F8;
-    padding: 100px 20px;
+    padding: 30px 20px;
     text-align: center;
+    position: fixed;
+    bottom: 30px;
+    left: 0;
+    right: 0;
 }
 
 .about-us h2 {
@@ -165,24 +99,16 @@ footer {
     margin-bottom: 40px;
 }
 
-.about-us .btn {
-    background-color: #FCA311;
-    border: none;
-    border-radius: 25px;
-    color: white;
-    font-size: 20px;
-    padding: 10px 20px;
-    text-decoration: none;
-}
+
 header {
-    position: relative; /* header를 position 속성이 relative인 상태로 지정합니다. */
+    position: relative;
 }
 
 #search-li {
-    position: absolute; /* search-form을 position 속성이 absolute인 상태로 지정합니다. */
-    top: 50%; /* search-form을 수직으로 중앙 정렬하기 위해 top 값을 50%로 지정합니다. */
-    right: 10px; /* search-form을 오른쪽에서 10px의 간격으로 위치시킵니다. */
-    transform: translateY(-50%); /* search-form을 수직으로 정중앙에 위치시킵니다. */
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
 }
 
 #search-form input[type="text"] {

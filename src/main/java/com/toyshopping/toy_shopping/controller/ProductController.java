@@ -17,7 +17,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -52,13 +55,13 @@ public class ProductController {
             @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 발급 받은 access_token", required = true, dataType = "String", paramType = "header")
     })
     @PostMapping(value = "/addProduct")
-    public ResponseEntity<ProductResponseDto> createProduct(@RequestParam("name") String name, @RequestParam("price") int price, @RequestParam("stock") int stock) {
+    public ResponseEntity<ProductResponseDto> createProduct(@RequestParam("name") String name, @RequestParam("price") int price, @RequestParam("stock") int stock, @RequestParam("imgFile") MultipartFile imgFile) throws IOException {
         ProductDto productDto = new ProductDto();
         productDto.setName(name);
         productDto.setStock(stock);
         productDto.setPrice(price);
 
-        ProductResponseDto productResponseDto = productService.saveProduct(productDto);
+        ProductResponseDto productResponseDto = productService.saveProduct(productDto, imgFile);
 
         return ResponseEntity.status(HttpStatus.OK).body(productResponseDto);
     }

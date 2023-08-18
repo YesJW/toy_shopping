@@ -5,8 +5,25 @@
     background-color: #f8f8f8;
     border: 1px solid #ddd;
     border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+.product-info {
+    flex: 1;
 }
 
+.product-image {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.product-image img {
+    max-width: 100%;
+    height: auto;
+    max-height: 300px; /* 원하는 크기로 설정 */
+}
 h2#product-name {
     margin-top: 0;
 }

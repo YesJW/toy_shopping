@@ -35,7 +35,7 @@
 </header>
 
 <h1>Product Registration</h1>
-<form id="add-product-form" action="/addProduct" method="POST">
+<form th:action="@{/addProduct}" method="post" id="add-product-form" enctype="multipart/form-data">
   <label for="name">Product Name:</label>
   <input type="text" id="name" name="name"><br>
 
@@ -45,6 +45,9 @@
   <label for="stock">Stock:</label>
   <input type="number" id="stock" name="stock"><br>
 
+  <label for="imgFile">Product Image</label>
+  <input type="file" id="imgFile" name="imgFile"><br>
+
   <button type="submit" id="add-product-btn">Register Product</button>
 </form>
 
@@ -52,21 +55,25 @@
   $(document).ready(function() {
     $('#add-product-btn').click(function(e) {
       e.preventDefault(); // form의 기본 동작을 막음
-
+      var formData = new FormData(document.getElementById('add-product-form'));
       $.ajax({
         url: '/addProduct',
         type: 'POST',
+        data: formData,
+        processData: false, // 필수: FormData가 문자열로 변환되는 것을 막음
+        contentType: false, // 필수: Content-Type 헤더를 설정하지 않음
         beforeSend: function(xhr) {
           const token = localStorage.getItem('X-AUTH-TOKEN');
           xhr.setRequestHeader("X-AUTH-TOKEN", token);
         },
-        data: $('#add-product-form').serialize(),
         success: function(data, status, xhr) {
+          console.log(data)
           // 성공적으로 요청을 보냈을 때 실행할 코드 작성
           alert('상품이 등록되었습니다.');
           window.location.href='/main';
         },
         error: function(jqXHR, textStatus, errorThrown) {
+          console.log(errorThrown)
           alert('상품 등록을 실패하였습니다.');
         }
       });

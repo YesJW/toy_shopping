@@ -19,6 +19,7 @@ $(document).ready(function() {
             $('#product-price').text('$' + product.price);
             $('#quantity').attr('max', product.stock);
 
+            $('#product-img').attr('src',product.imgPath);
             $('#quantity').on('change', function() {
                 var selectedQuantity = $(this).val();
 
