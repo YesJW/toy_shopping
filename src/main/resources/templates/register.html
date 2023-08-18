@@ -9,6 +9,22 @@
   <script>
     myHeader();
   </script>
+  <script>
+    myHeader();
+
+    // 비밀번호 확인 함수
+    function checkPassword() {
+      var password = document.getElementsByName("password")[0].value;
+      var password2 = document.getElementsByName("password2")[0].value;
+
+      if (password !== password2) {
+        alert("비밀번호가 동일하지 않습니다.");
+        return false; // 폼 제출을 막음
+      }
+
+      return true; // 폼 제출을 허용
+    }
+  </script>
   <title>sign up</title>
 </head>
 <body>
@@ -31,13 +47,12 @@
 </header>
 <h1>Sign Up</h1> <hr>
 
-<form th:action="@{/sign-api/sign-up}" method="POST">
+<form th:action="@{/sign-api/sign-up}" method="POST" onsubmit="return checkPassword();">
   userName : <input type = "text" name="name"><br>
   id : <input type="text" name="email"> <br>
   password : <input type="password" name="password"> <br>
+  password2 : <input type="password" name="password2"> <br>
   phone : <input type="text" name="phone"><br>
-  <input type="radio" name="auth" value="ADMIN"> ADMIN
-  <input type="radio" name="auth" value="USER" checked="checked"> USER <br>
   <button type="submit">Join</button>
 </form> <br>
 
