@@ -10,7 +10,6 @@ function mainPageJs() {
             beforeSend: myFunction,
             success: function (data, status, xhr) {
                 xhr.setRequestHeader('X-AUTH-TOKEN', token);
-                console.log("asdasdasdasdasdasd")
             },
             error: function (jqXHR, textStatus, errorThrown) {
             }
