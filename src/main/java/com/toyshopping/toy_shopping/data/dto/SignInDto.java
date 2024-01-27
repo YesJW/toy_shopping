@@ -6,7 +6,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class SignInResultDto extends SignUpResultDto{
+/*public class SignInResultDto extends SignUpResultDto{
 
     private String token;
 
@@ -15,4 +15,8 @@ public class SignInResultDto extends SignUpResultDto{
         super(success, code, msg);
         this.token = token;
     }
+}*/
+public class SignInDto {
+    private String username;
+    private String password;
 }

@@ -1,15 +1,19 @@
 package com.toyshopping.toy_shopping.repository;
 
-import com.toyshopping.toy_shopping.data.entity.User;
+import com.toyshopping.toy_shopping.data.entity.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<User, Long> {
-    User getByUid(String uid);
+import java.util.Optional;
 
-    User findUserByNameAndPhone(String name, String phone);
+public interface UserRepository extends JpaRepository<Users, Long> {
+    Users getByUid(String uid);
 
-    User findUserByUidAndNameAndPhone(String uid, String name, String phone);
+    Users findUserByNameAndPhone(String name, String phone);
 
-    User findUserByUidAndPhone(String uid, String phone);
+    Users findUserByUidAndNameAndPhone(String uid, String name, String phone);
+
+    Users findUserByUidAndPhone(String uid, String phone);
+
+    Optional<Users> findByUid(String username);
 
 }
