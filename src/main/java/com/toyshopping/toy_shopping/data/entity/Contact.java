@@ -43,6 +43,6 @@ public class Contact {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_num")
-    private User uno;
+    private Users uno;
 
 }

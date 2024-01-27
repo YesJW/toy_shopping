@@ -3,13 +3,10 @@ package com.toyshopping.toy_shopping.controller;
 import com.toyshopping.toy_shopping.data.dto.ChangeProductDto;
 import com.toyshopping.toy_shopping.data.dto.ProductDto;
 import com.toyshopping.toy_shopping.data.dto.ProductResponseDto;
-import com.toyshopping.toy_shopping.data.entity.User;
+import com.toyshopping.toy_shopping.data.entity.Users;
 import com.toyshopping.toy_shopping.service.ProductService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
-import lombok.Getter;
-import lombok.Setter;
-import org.dom4j.rule.Mode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +33,9 @@ public class ProductController {
 
     @GetMapping(value = "/getUserProducts")
     public ResponseEntity<List<ProductResponseDto>> getUserProduct() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Users users = (Users) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        List<ProductResponseDto> productResponseDto = productService.getUserProduct(user.getId());
+        List<ProductResponseDto> productResponseDto = productService.getUserProduct(users.getId());
 
         return ResponseEntity.status(HttpStatus.OK).body(productResponseDto);
 

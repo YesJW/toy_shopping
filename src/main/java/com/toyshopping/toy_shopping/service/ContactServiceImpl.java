@@ -4,7 +4,7 @@ import com.toyshopping.toy_shopping.data.dto.ContactAdminDto;
 import com.toyshopping.toy_shopping.data.dto.ContactDto;
 import com.toyshopping.toy_shopping.data.dto.ContactReplyDto;
 import com.toyshopping.toy_shopping.data.entity.Contact;
-import com.toyshopping.toy_shopping.data.entity.User;
+import com.toyshopping.toy_shopping.data.entity.Users;
 import com.toyshopping.toy_shopping.repository.ContactRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -64,10 +64,10 @@ public class ContactServiceImpl implements ContactService{
 
     @Override
     public ContactDto saveContact(ContactDto contactDto) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Users users = (Users) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String nowTime = nowTime();
         Contact contact = new Contact();
-        contact.setUno(user);
+        contact.setUno(users);
         contact.setMessage(contactDto.getMessage());
         contact.setName(contactDto.getName());
         contact.setTitle(contactDto.getTitle());

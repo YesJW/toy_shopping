@@ -1,7 +1,6 @@
 package com.toyshopping.toy_shopping.controller;
 
 import com.toyshopping.toy_shopping.data.dto.UserDto;
-import com.toyshopping.toy_shopping.data.entity.User;
 import com.toyshopping.toy_shopping.repository.UserRepository;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

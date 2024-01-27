@@ -1,8 +1,7 @@
 package com.toyshopping.toy_shopping.service;
 
-import com.toyshopping.toy_shopping.controller.MainPageController;
 import com.toyshopping.toy_shopping.data.dto.UserDto;
-import com.toyshopping.toy_shopping.data.entity.User;
+import com.toyshopping.toy_shopping.data.entity.Users;
 import com.toyshopping.toy_shopping.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +22,10 @@ public class FindIdPwServiceImpl implements FindIdPwService{
 
     @Override
     public String findUserId(String name, String phone) {
-        User user = userRepository.findUserByNameAndPhone(name, phone);
-        LOGGER.info("id : {}",user.getUid());
-        if (user != null) {
-            String id = user.getUid();
+        Users users = userRepository.findUserByNameAndPhone(name, phone);
+        LOGGER.info("id : {}", users.getUid());
+        if (users != null) {
+            String id = users.getUid();
             return id;
         }
         return "아이디를 찾지 못했습니다.";
@@ -34,15 +33,15 @@ public class FindIdPwServiceImpl implements FindIdPwService{
 
     @Override
     public UserDto search_User_Pw(String id, String name, String phone) {
-        User user = userRepository.findUserByUidAndNameAndPhone(id, name, phone);
-        if (user != null) {
+        Users users = userRepository.findUserByUidAndNameAndPhone(id, name, phone);
+        if (users != null) {
             UserDto userDto = new UserDto();
-            userDto.setUserNo(user.getId());
-            userDto.setUserId(user.getUid());
-            userDto.setUserPw(user.getPassword());
-            userDto.setRoles(user.getRoles());
-            userDto.setUserName(user.getName());
-            userDto.setPhone(user.getPhone());
+            userDto.setUserNo(users.getId());
+            userDto.setUserId(users.getUid());
+            userDto.setUserPw(users.getPassword());
+            userDto.setRoles(users.getRoles());
+            userDto.setUserName(users.getName());
+            userDto.setPhone(users.getPhone());
 
             return userDto;
         }
@@ -51,10 +50,10 @@ public class FindIdPwServiceImpl implements FindIdPwService{
 
     @Override
     public UserDto changeUserPw(String id, String phone, String password) {
-        User user = userRepository.findUserByUidAndPhone(id, phone);
-        if (user != null) {
-            user.setPassword(passwordEncoder.encode(password));
-            User changePassword = userRepository.save(user);
+        Users users = userRepository.findUserByUidAndPhone(id, phone);
+        if (users != null) {
+            users.setPassword(passwordEncoder.encode(password));
+            Users changePassword = userRepository.save(users);
 
             UserDto userDto = new UserDto();
             userDto.setUserNo(changePassword.getId());

@@ -4,7 +4,7 @@ import com.toyshopping.toy_shopping.data.dto.ShoppingCartDto;
 import com.toyshopping.toy_shopping.data.dto.ShoppingCartResponseDto;
 import com.toyshopping.toy_shopping.data.entity.Product;
 import com.toyshopping.toy_shopping.data.entity.ShoppingCart;
-import com.toyshopping.toy_shopping.data.entity.User;
+import com.toyshopping.toy_shopping.data.entity.Users;
 import com.toyshopping.toy_shopping.repository.ProductRepository;
 import com.toyshopping.toy_shopping.repository.ShoppingCartRepository;
 import org.slf4j.Logger;
@@ -32,10 +32,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
     @Override
     public ShoppingCartResponseDto addShoppingCartProduct(ShoppingCartDto shoppingCartDto) {
         LOGGER.info("[addShoppingCratProduct] 쇼핑카트에 제품 추가");
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Users users = (Users) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Product product = productRepository.getById(shoppingCartDto.getPNum());
         ShoppingCart shoppingCart = new ShoppingCart();
-        shoppingCart.setUno(user);
+        shoppingCart.setUno(users);
         shoppingCart.setPNum(product);
         shoppingCart.setStock(shoppingCartDto.getStock());
         ShoppingCart saveCart = shoppingCartRepository.save(shoppingCart);

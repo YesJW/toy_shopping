@@ -26,5 +26,5 @@ public class ShoppingCart {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
-    private User uno;
+    private Users uno;
 }

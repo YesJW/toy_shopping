@@ -3,7 +3,7 @@ package com.toyshopping.toy_shopping.service;
 import com.toyshopping.toy_shopping.data.dto.ProductDto;
 import com.toyshopping.toy_shopping.data.dto.ProductResponseDto;
 import com.toyshopping.toy_shopping.data.entity.Product;
-import com.toyshopping.toy_shopping.data.entity.User;
+import com.toyshopping.toy_shopping.data.entity.Users;
 import com.toyshopping.toy_shopping.repository.ProductRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,8 +67,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponseDto saveProduct(ProductDto productDto, MultipartFile imgFile) throws IOException {
-        User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        LOGGER.info("[UserNo 가져오기] text : {}", user.getId());
+        Users users = (Users)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        LOGGER.info("[UserNo 가져오기] text : {}", users.getId());
         String imgOriName = imgFile.getOriginalFilename();
         String imgName = "";
 
@@ -86,7 +86,7 @@ public class ProductServiceImpl implements ProductService {
         product.setName(productDto.getName());
         product.setPrice(productDto.getPrice());
         product.setStock(productDto.getStock());
-        product.setUno(user);
+        product.setUno(users);
         product.setImgName(imgName);
         product.setImgPath("/images/" + imgName);
         Product saveProduct = productRepository.save(product);

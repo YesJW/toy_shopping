@@ -30,7 +30,7 @@ public class Product {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_no")
-    private User uno;
+    private Users uno;
 
     @Column(nullable = false)
     private String imgName;

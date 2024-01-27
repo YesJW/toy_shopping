@@ -3,8 +3,7 @@ package com.toyshopping.toy_shopping.controller;
 import com.toyshopping.toy_shopping.data.dto.ContactAdminDto;
 import com.toyshopping.toy_shopping.data.dto.ContactDto;
 import com.toyshopping.toy_shopping.data.dto.ContactReplyDto;
-import com.toyshopping.toy_shopping.data.entity.User;
-import com.toyshopping.toy_shopping.repository.ContactRepository;
+import com.toyshopping.toy_shopping.data.entity.Users;
 import com.toyshopping.toy_shopping.service.ContactService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,15 +43,15 @@ public class ContactController {
 
     @GetMapping(value = "/getAllContact")
     public <T> ResponseEntity<T> getAllContact() {
-        User userDto = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        LOGGER.info("[ContactController] getAllContact 호출" + userDto.getRoles().get(0));
+        Users usersDto = (Users) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        LOGGER.info("[ContactController] getAllContact 호출" + usersDto.getRoles().get(0));
 
-        if(userDto.getRoles().get(0).equals("ROLE_USER")) {
-            List<ContactDto> contactDtos = contactService.getAllContact(userDto.getId());
+        if(usersDto.getRoles().get(0).equals("ROLE_USER")) {
+            List<ContactDto> contactDtos = contactService.getAllContact(usersDto.getId());
             return (ResponseEntity<T>) ResponseEntity.status(HttpStatus.OK).body(contactDtos);
         }
         else{
-            List<ContactAdminDto> contactAdminDtos = contactService.getAdminContact(userDto.getName().toString());
+            List<ContactAdminDto> contactAdminDtos = contactService.getAdminContact(usersDto.getName().toString());
             return (ResponseEntity<T>) ResponseEntity.status(HttpStatus.OK).body(contactAdminDtos);
 
         }
@@ -80,12 +79,12 @@ public class ContactController {
     @PostMapping(value = "/sendContact")
     public ResponseEntity<ContactDto> sendContact(@RequestParam("title") String title, @RequestParam("message") String message) {
         LOGGER.info("[ContactController] sendContact 호출");
-        User userDto = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Users usersDto = (Users) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         ContactDto contactDto = new ContactDto();
         contactDto.setTitle(title);
         contactDto.setMessage(message);
-        contactDto.setName(userDto.getName());
-        if (userDto.getName() != "admin") {
+        contactDto.setName(usersDto.getName());
+        if (usersDto.getName() != "admin") {
             contactDto.setTo_Name("admin");
         }
         ContactDto save_con = contactService.saveContact(contactDto);

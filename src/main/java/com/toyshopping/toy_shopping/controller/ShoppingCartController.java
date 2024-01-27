@@ -1,11 +1,9 @@
 package com.toyshopping.toy_shopping.controller;
 
-import com.toyshopping.toy_shopping.data.dto.ProductResponseDto;
 import com.toyshopping.toy_shopping.data.dto.ShoppingCartDto;
 import com.toyshopping.toy_shopping.data.dto.ShoppingCartResponseDto;
-import com.toyshopping.toy_shopping.data.entity.User;
+import com.toyshopping.toy_shopping.data.entity.Users;
 import com.toyshopping.toy_shopping.service.ShoppingCartService;
-import io.swagger.models.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -48,8 +46,8 @@ public class ShoppingCartController {
 
     @GetMapping(value = "/getCart")
     public ResponseEntity<List<ShoppingCartResponseDto>> getCart() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<ShoppingCartResponseDto> shoppingCartProducts = shoppingCartService.getShoppingCartProduct(user.getId());
+        Users users = (Users) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<ShoppingCartResponseDto> shoppingCartProducts = shoppingCartService.getShoppingCartProduct(users.getId());
 
         return ResponseEntity.status(HttpStatus.OK).body(shoppingCartProducts);
     }
