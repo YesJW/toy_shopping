@@ -11,12 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
-@RestController
+@Controller
 public class ContactController {
 
     private static Logger LOGGER = LoggerFactory.getLogger(ContactController.class);
@@ -28,20 +29,19 @@ public class ContactController {
     }
 
     @GetMapping(value = "/contactPage")
-    public ModelAndView getContactPage() {
+    public String getContactPage() {
         LOGGER.info("[ContactController] getContactPage 호출");
-        ModelAndView mav = new ModelAndView("contactPage");
-        return mav;
+        return "/contactPage";
     }
 
     @GetMapping(value = "/contactAns")
-    public ModelAndView getContactAnsPage() {
+    public String getContactAnsPage() {
         LOGGER.info("[ContactController] getContactAns 호출");
-        ModelAndView mav = new ModelAndView("contactAns");
-        return mav;
+        return "/contactAns";
     }
 
     @GetMapping(value = "/getAllContact")
+    @ResponseBody
     public <T> ResponseEntity<T> getAllContact() {
         Users usersDto = (Users) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         LOGGER.info("[ContactController] getAllContact 호출" + usersDto.getRoles().get(0));
@@ -59,6 +59,7 @@ public class ContactController {
     }
 
     @GetMapping(value = "/getContact")
+    @ResponseBody
     public ResponseEntity<ContactDto> getContact(@RequestParam Long num) {
         LOGGER.info("[ContactController] getContact 호출");
 
@@ -69,6 +70,7 @@ public class ContactController {
     }
 
     @GetMapping(value = "/getAdminContact")
+    @ResponseBody
     public ResponseEntity<List<ContactAdminDto>> getAdminContact() {
         LOGGER.info("[ContactController] getAdminContact 호출");
         List<ContactAdminDto> contactAdminDtos = contactService.getAdminContact("admin");
@@ -77,6 +79,7 @@ public class ContactController {
     }
 
     @PostMapping(value = "/sendContact")
+    @ResponseBody
     public ResponseEntity<ContactDto> sendContact(@RequestParam("title") String title, @RequestParam("message") String message) {
         LOGGER.info("[ContactController] sendContact 호출");
         Users usersDto = (Users) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -93,6 +96,7 @@ public class ContactController {
     }
 
     @PutMapping(value = "/replyContact")
+    @ResponseBody
     public ResponseEntity<ContactReplyDto> contactReply(@RequestParam("num") Long number, @RequestParam("message") String message) {
         ContactReplyDto contactReplyDto = contactService.replyContact(number, message);
 

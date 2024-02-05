@@ -13,14 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.util.List;
 
-@RestController
+@Controller
 public class ProductController {
 
     private final ProductService productService;
@@ -32,6 +32,7 @@ public class ProductController {
     }
 
     @GetMapping(value = "/getUserProducts")
+    @ResponseBody
     public ResponseEntity<List<ProductResponseDto>> getUserProduct() {
         Users users = (Users) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -42,6 +43,7 @@ public class ProductController {
     }
 
     @GetMapping(value = "/getAllProduct")
+    @ResponseBody
     public ResponseEntity<List<ProductResponseDto>> getAllProduct() {
         List<ProductResponseDto> productResponseDtos = productService.getAllProduct();
 
@@ -52,6 +54,7 @@ public class ProductController {
             @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 발급 받은 access_token", required = true, dataType = "String", paramType = "header")
     })
     @PostMapping(value = "/addProduct")
+    @ResponseBody
     public ResponseEntity<ProductResponseDto> createProduct(@RequestParam("name") String name, @RequestParam("price") int price, @RequestParam("stock") int stock, @RequestParam("imgFile") MultipartFile imgFile) throws IOException {
         ProductDto productDto = new ProductDto();
         productDto.setName(name);
@@ -64,13 +67,13 @@ public class ProductController {
     }
 
     @GetMapping(value = "/addProductPage")
-    public ModelAndView productPage() {
-        ModelAndView mav = new ModelAndView("addProduct");
+    public String productPage() {
         LOGGER.info("[mypageGetMethod] mypage get 메서드 호출됨.");
-        return mav;
+        return "/addProduct";
     }
 
     @PutMapping("/updateProduct")
+    @ResponseBody
     public ResponseEntity<ProductResponseDto> changeProductName(
             @RequestBody ChangeProductDto changeProductDto) throws Exception {
         ProductResponseDto productResponseDto = productService.changeProduct(
@@ -84,12 +87,14 @@ public class ProductController {
     }
 
     @DeleteMapping("/deleteProduct")
+    @ResponseBody
     public ResponseEntity<String> deleteProduct(@RequestParam("number") Long number) throws Exception {
         productService.deleteProduct(number);
         return ResponseEntity.status(HttpStatus.OK).body("정상적으로 삭제되었습니다.");
     }
 
     @GetMapping(value = "/getProductDetail")
+    @ResponseBody
     public ProductResponseDto getProductDetail(@RequestParam("id") Long productId) {
         LOGGER.info("[getProductDetailGetMethod] getProductDetail 메서드 호출됨.");
         ProductResponseDto product = productService.getProduct(productId);
@@ -98,23 +103,20 @@ public class ProductController {
     }
 
     @GetMapping(value = "/productDetail")
-    public ModelAndView productDetailPage() {
-        ModelAndView mav = new ModelAndView("productDetail");
+    public String productDetailPage() {
         LOGGER.info("[productDetailGetMethod] productDetail 메서드 호출됨.");
-        return mav;
+        return "/productDetail";
     }
 
     @GetMapping(value = "/updatePage")
-    public ModelAndView updatePage() {
-        ModelAndView mav = new ModelAndView("updatePage");
+    public String updatePage() {
         LOGGER.info("[updateProductGetMethod] updateProduct 메서드 호출됨.");
-        return mav;
+        return "/updatePage";
     }
 
     @GetMapping(value = "/searchPage")
-    public ModelAndView searchProductPage(){
-        ModelAndView mav = new ModelAndView("searchPage");
-        return mav;
+    public String searchProductPage(){
+        return "/searchPage";
     }
 
     @GetMapping(value = "/searchProducts")

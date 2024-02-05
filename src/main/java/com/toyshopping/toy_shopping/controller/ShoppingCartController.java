@@ -7,6 +7,7 @@ import com.toyshopping.toy_shopping.service.ShoppingCartService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -14,7 +15,7 @@ import java.util.List;
 
 import static org.hibernate.tool.schema.SchemaToolingLogging.LOGGER;
 
-@RestController
+@Controller
 public class ShoppingCartController {
     private final ShoppingCartService shoppingCartService;
 
@@ -24,13 +25,13 @@ public class ShoppingCartController {
 
 
     @GetMapping(value = "/cart")
-    public ModelAndView cartPage() {
+    public String cartPage() {
         LOGGER.info("[cartPageGet] ShoppingCartController get 메서드 호출됨.");
-        ModelAndView mav = new ModelAndView("shoppingCartPage.html");
-        return mav;
+        return "/shoppingCartPage";
     }
 
     @PostMapping(value = "/addCart")
+    @ResponseBody
     public ResponseEntity<ShoppingCartResponseDto> addCartProduct(@RequestParam("pnum") Long pNum, @RequestParam("stock") int stock, @RequestParam("uno") Long uNo,
                                                                   @RequestParam("price") int price, @RequestParam("name") String pName) {
         ShoppingCartDto shoppingCartDto = new ShoppingCartDto();
@@ -45,6 +46,7 @@ public class ShoppingCartController {
     }
 
     @GetMapping(value = "/getCart")
+    @ResponseBody
     public ResponseEntity<List<ShoppingCartResponseDto>> getCart() {
         Users users = (Users) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<ShoppingCartResponseDto> shoppingCartProducts = shoppingCartService.getShoppingCartProduct(users.getId());
@@ -53,6 +55,7 @@ public class ShoppingCartController {
     }
 
     @DeleteMapping(value = "/removeFromCart")
+    @ResponseBody
     public ResponseEntity<String> removeFromCart(@RequestParam("cnum") Long id) throws Exception{
         shoppingCartService.deleteShoppingCartProduct(id);
         return ResponseEntity.status(HttpStatus.OK).body("정상적으로 삭제되었습니다.");

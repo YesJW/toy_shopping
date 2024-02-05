@@ -1,18 +1,16 @@
 package com.toyshopping.toy_shopping.controller;
 
-import com.toyshopping.toy_shopping.data.dto.UserDto;
+import com.toyshopping.toy_shopping.data.dto.UsersDto;
 import com.toyshopping.toy_shopping.service.FindIdPwServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-@RestController
+@Controller
 public class FindIdPwController {
 
     private FindIdPwServiceImpl findIdPwService;
@@ -23,6 +21,7 @@ public class FindIdPwController {
     }
 
     @GetMapping("/findId")
+    @ResponseBody
     public String findId(@RequestParam String name, @RequestParam String phone) {
         LOGGER.info("[findId] findId Get메서드 호출됨.");
         String id = findIdPwService.findUserId(name, phone);
@@ -30,35 +29,33 @@ public class FindIdPwController {
     }
 
     @GetMapping("/getFindIdPage")
-    public ModelAndView findIdPage() {
+    public String findIdPage() {
         LOGGER.info("[getFindIdPageMapping] getFindIdPage 메서드 호출됨.");
-        ModelAndView mav = new ModelAndView("findId");
-        return mav;
+        return "/findId";
     }
 
     @GetMapping("/getPwPage")
-    public ModelAndView findPwPage() {
+    public String findPwPage() {
         LOGGER.info("[getPwPage] getPwPage 메서드 호출됨.");
-        ModelAndView mav = new ModelAndView("passwordPage");
-        return mav;
+        return "/passwordPage";
     }
 
     @GetMapping("/getResetPwPage")
-    public ModelAndView getResetPwPage() {
-        LOGGER.info("[getResetPwPage] getResetPwPage 메서드 호출됨.");
-        ModelAndView mav = new ModelAndView("resetPassword");
-        return mav;
+    public String getResetPwPage() {
+        return "/resetPassword";
     }
 
     @GetMapping("/search_user_pw")
-    public ResponseEntity<UserDto> findIdForReset(@RequestParam String name, @RequestParam String id, @RequestParam String phone) {
-        UserDto userDto = findIdPwService.search_User_Pw(id, name, phone);
+    @ResponseBody
+    public ResponseEntity<UsersDto> findIdForReset(@RequestParam String name, @RequestParam String id, @RequestParam String phone) {
+        UsersDto userDto = findIdPwService.search_User_Pw(id, name, phone);
         return ResponseEntity.status(HttpStatus.OK).body(userDto);
     }
 
     @PutMapping("/reset_password")
-    public ResponseEntity<UserDto> resetPW(@RequestParam String id, @RequestParam String phone, @RequestParam String password) {
-        UserDto userDto = findIdPwService.changeUserPw(id, phone, password);
+    @ResponseBody
+    public ResponseEntity<UsersDto> resetPW(@RequestParam String id, @RequestParam String phone, @RequestParam String password) {
+        UsersDto userDto = findIdPwService.changeUserPw(id, phone, password);
         return ResponseEntity.status(HttpStatus.OK).body(userDto);
     }
 }

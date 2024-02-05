@@ -1,8 +1,7 @@
 package com.toyshopping.toy_shopping.controller;
 
-import com.toyshopping.toy_shopping.data.dto.JwtTokenDto;
-import com.toyshopping.toy_shopping.data.dto.SignInDto;
-import com.toyshopping.toy_shopping.data.dto.SignUpResultDto;
+import com.toyshopping.toy_shopping.config.security.SecurityUtil;
+import com.toyshopping.toy_shopping.data.dto.*;
 import com.toyshopping.toy_shopping.service.SignService;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
@@ -11,13 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestController
+@Controller
 @RequestMapping("/sign-api")
 public class SignController {
 
@@ -30,7 +32,8 @@ public class SignController {
     }
 
     @PostMapping(value = "/sign-in")
-    public JwtTokenDto signIn(@RequestBody SignInDto signInDto){
+    @ResponseBody
+    public ResponseEntity<JwtTokenDto> signIn(@RequestBody SignInDto signInDto){
             /*@ApiParam(value = "ID", required = true) @RequestParam String id,
             @ApiParam(value = "Password", required = true) @RequestParam String password,
             HttpServletResponse response) throws RuntimeException {
@@ -42,37 +45,39 @@ public class SignController {
 
         response.setHeader("X-AUTH-TOKEN", signInResultDto.getToken());
         return signInResultDto;*/
-        String username = signInDto.getUsername();
+        String uid = signInDto.getUid();
         String password = signInDto.getPassword();
-        JwtTokenDto jwtTokenDto = signService.signIn(username, password);
-        LOGGER.info("request username = {}, password = {}", username, password);
+        JwtTokenDto jwtTokenDto = signService.signIn(uid, password);
+        LOGGER.info("request username = {}, password = {}", uid, password);
         LOGGER.info("jwtToken accessToken = {}, refreshToken = {}", jwtTokenDto.getAccessToken(), jwtTokenDto.getRefreshToken());
-        return jwtTokenDto;
+        return ResponseEntity.ok().body(jwtTokenDto);
 
     }
 
-    @PostMapping("/test")
-    public String test(){
-        return "sueccess";
-    }
 
     @PostMapping(value = "/sign-up")
-    public ModelAndView signUp(
+    @ResponseBody
+    public ResponseEntity<UsersDto> signUp(@RequestBody SignUpDto signUpDto) {
+        UsersDto usersDto = signService.signUp(signUpDto);
+        return ResponseEntity.ok(usersDto);
+    }
+        /*(
             @ApiParam(value = "ID", required = true) @RequestParam("email") String id,
             @ApiParam(value = "비밀번호", required = true) @RequestParam("password") String password,
             @ApiParam(value = "이름", required = true) @RequestParam("name") String name,
-            @ApiParam(value = "전화번호", required = true) @RequestParam("phone") String phone) {
-        String role = "USER";
+            @ApiParam(value = "전화번호", required = true) @RequestParam("phone") String phone)*/
+        /*String role = "USER";
         LOGGER.info("[signUp] 회원가입을 수행합니다. id : {}, password : ****, name : {}, role : {}", id, name, role);
         SignUpResultDto signUpResultDto = signService.signUp(id, password, name, phone, role);
 
         LOGGER.info("[signUp] 회원가입을 완료했습니다. id : {}", id);
         ModelAndView mav = new ModelAndView("login");
-        return mav;
-    }
+        return mav;*/
+
 
 
     @GetMapping(value = "/exception")
+    @ResponseBody
     public void exceptionTest() throws RuntimeException {
         throw new RuntimeException("접근이 금지되었습니다.");
     }
@@ -93,15 +98,15 @@ public class SignController {
     }
 
     @GetMapping(value = "/register")
-    public ModelAndView register() {
-        ModelAndView mav = new ModelAndView("register");
-        return mav;
+    public String register(HttpServletRequest request, Model model) {
+        model.addAttribute("token", "dasdsa");
+        return "/register";
     }
 
     @GetMapping(value = "/login")
-    public ModelAndView login(){
-        ModelAndView mav = new ModelAndView("login");
-        return mav;
+    public String login(HttpServletRequest request, Model model){
+        model.addAttribute("token", "dasdsa");
+        return "/login";
     }
 
 
