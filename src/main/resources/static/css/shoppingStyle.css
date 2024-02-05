@@ -56,3 +56,7 @@ thead {
   background-color: #ccc;
   cursor: default;
 }
+
+.no-js {
+  display: none;
+}

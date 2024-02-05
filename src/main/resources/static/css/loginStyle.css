@@ -44,3 +44,7 @@ button {
 button:hover {
     background-color: #555;
 }
+.no-js {
+    display: none;
+}
+

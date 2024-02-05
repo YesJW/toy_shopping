@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security" class="no-js">
 <head>
 	<meta charset="UTF-8">
 	<title>Login Page</title>
@@ -8,6 +8,7 @@
 	<script src="/js/headerjs.js"></script>
 	<script>
 		myHeader();
+
 	</script>
 	<link rel="stylesheet" href="/css/style2.css">
 	<link rel="stylesheet" href="/css/loginStyle.css">
@@ -15,32 +16,19 @@
 		function submitForm() {
 			var id = $('#id').val();
 			var password = $('#password').val();
-			let token;
-			console.log("")
 			$.ajax({
+				headers: {
+					'Content-Type': 'application/json'
+				},
 				url: '/sign-api/sign-in',
 				type: 'POST',
-				data: {
-					'id': id,
-					'password': password,
-					'token': token
-				},
-				datatype: "json",
+				data: JSON.stringify({
+					'uid': id,
+					'password': password
+				}),
 				success: function(data, status, xhr) {
 					console.log('Success: ' + data);
-					const jwt = xhr.getResponseHeader('X-AUTH-TOKEN');
-					localStorage.setItem('X-AUTH-TOKEN', jwt);
-					$.ajax({
-						url: '/main',
-						type: 'GET',
-						headers: { 'X-AUTH-TOKEN': jwt },
-						success: function(data) {
-							window.location.href = '/main';
-						},
-						error: function(jqXHR, textStatus, errorThrown) {
-							console.log('Error: ' + errorThrown);
-						}
-					});
+					localStorage.setItem("jwt", data.grantType+" "+data.accessToken)
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
 					alert("아이디 비밀번호를 확인해주세요.");
@@ -94,13 +82,13 @@
 	</nav>
 </header>
 <h1>로그인 페이지</h1>
-<form>
+<form method="post" action="/sign-api/sign-in">
 	<div class="input-group">
 		<label for="id">아이디:</label>
-		<input type="text" id="id" name="id">
+		<input type="text" id="id" name="uid">
 		<label for="password">비밀번호:</label>
 		<input type="password" id="password" name="password">
-		<button type="button"  onclick="submitForm()">로그인</button>
+		<button type="button" onclick="submitForm()">로그인</button>
 	</div>
 <!--	<div class="input-group">-->
 <!--		<label for="password">비밀번호:</label>-->

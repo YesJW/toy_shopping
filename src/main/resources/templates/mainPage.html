@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      class="no-js">
 <head>
   <meta charset="UTF-8">
   <title>Shopping Mall</title>
@@ -11,6 +12,9 @@
   <script>
     myHeader();
     mainPageJs();
+    $(function(){
+      $('html').removeClass('no-js');
+    });
   </script>
 </head>
 
@@ -54,6 +58,8 @@
 
 <footer>
   <p>&copy; 2023 Shopping Mall Project</p>
+  <div id="profile">
+  </div>
 </footer>
 </body>
 </html>

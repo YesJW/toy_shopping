@@ -118,3 +118,6 @@ footer {
     text-align: center;
 }
 
+.no-js {
+    display: none;
+}

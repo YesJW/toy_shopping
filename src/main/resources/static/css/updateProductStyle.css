@@ -57,3 +57,7 @@ form button:hover {
     color: #ff0000;
     margin-bottom: 10px;
 }
+
+.no-js {
+    display: none;
+}

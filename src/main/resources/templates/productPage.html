@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" class="no-js">
 <head>
     <meta charset="UTF-8">
     <title>Shopping Mall</title>
@@ -46,7 +46,12 @@
                 url: "/getAllProduct",
                 type: "GET",
                 dataType: "json",
-                success: function(data, status, xhr) {
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Content-type", "application/json");
+                    xhr.setRequestHeader("Authorization", localStorage.getItem("jwt"));
+                },
+            })
+                .done(function(data, status, xhr) {
 
                     if (data.length === 0) {
                         $('#product-list').append('<tr><td colspan="4">No products found</td></tr>');
@@ -70,9 +75,11 @@
                             });
                         });
                     }
-                },
-                error: function() {
-                    alert("Error loading products.");
+                }).fail(function(xhr, status, error) {
+                var jsonResponse = JSON.parse(xhr.responseText);
+                if (jsonResponse.status == "403" || jsonResponse.status == "500") { //로그인을 안했거나 토큰이 만료됐거나
+                    alert("로그인이 필요한 페이지입니다.");
+                    location.href = "/sign-api/login";
                 }
             });
 
@@ -101,8 +108,8 @@
                 },
                 dataType: 'json',
                 beforeSend: function (xhr){
-                    const token = localStorage.getItem('X-AUTH-TOKEN');
-                    xhr.setRequestHeader("X-AUTH-TOKEN", token);
+                    const token = localStorage.getItem('jwt');
+                    xhr.setRequestHeader("jwt", token);
                 },
                 success: function(response) {
                     alert('상품이 장바구니에 추가되었습니다.');
@@ -120,8 +127,8 @@
                 data: { id: productId },
                 dataType: 'html',
                 beforeSend: function (xhr){
-                    const token = localStorage.getItem('X-AUTH-TOKEN');
-                    xhr.setRequestHeader("X-AUTH-TOKEN", token);
+                    const token = localStorage.getItem('jwt');
+                    xhr.setRequestHeader("jwt", token);
                 },
                 success: function(product) {
                     // 상세 페이지를 업데이트합니다.

@@ -1,6 +1,6 @@
 function myHeader() {
     $(document).ready(function () {
-        const userToken = localStorage.getItem('X-AUTH-TOKEN'); // localStorage에서 토큰을 가져옴
+        const userToken = localStorage.getItem('jwt'); // localStorage에서 토큰을 가져옴
         $('#login-btn').click(function () {
             $.ajax({
                 url: '/sign-api/login',
@@ -39,7 +39,7 @@ function myHeader() {
                 url: '/mypage',
                 type: 'GET',
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader("X-AUTH-TOKEN", userToken);
+                    xhr.setRequestHeader("jwt", userToken);
 
                 },
                 success: function (data, status, xhr) {
@@ -52,7 +52,7 @@ function myHeader() {
             fetch('/mypage', {
                 headers: {
                     'content-type': 'application/json',
-                    'X-AUTH-TOKEN': userToken // Authorization 헤더에 토큰 값을 추가
+                    'jwt': userToken // Authorization 헤더에 토큰 값을 추가
                 }
             })
                 .then(response => {
@@ -75,16 +75,16 @@ function myHeader() {
 
         // 로그아웃 버튼 클릭 시
         $('#logout-btn').click(function () {
-            localStorage.removeItem('X-AUTH-TOKEN');
+            localStorage.removeItem('jwt');
             $('#login-btn').show();
             $('#register-btn').show();
             $('#logout-btn').hide();
             $('#mypage-btn').hide();
         });
 
+        $('html').removeClass('no-js');
+
     });
-
-
 
 }
 
