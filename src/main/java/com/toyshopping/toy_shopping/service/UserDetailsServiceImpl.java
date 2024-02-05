@@ -27,9 +27,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        LOGGER.info("[loadUserByUsername] loadUserbyUsername 수행. username: {}", username);
-        return userRepository.findByUid(username)
+    public UserDetails loadUserByUsername(String uid) throws UsernameNotFoundException {
+        LOGGER.info("[loadUserByUsername] loadUserbyUsername 수행. userid: {}", uid);
+        return userRepository.findByUid(uid)
                 .map(this::createUserDetails)
                 .orElseThrow(() -> new UsernameNotFoundException("회원을 찾을 수 없습니다."));
 
@@ -37,7 +37,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private UserDetails createUserDetails(Users user){
         return User.builder().username(user.getUsername())
-                .password(passwordEncoder.encode(user.getPassword()))
+                .password(user.getPassword())
                 .roles(user.getRoles().toArray(new String[0]))
                 .build();
 
