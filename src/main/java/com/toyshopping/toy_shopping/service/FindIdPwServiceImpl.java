@@ -1,6 +1,6 @@
 package com.toyshopping.toy_shopping.service;
 
-import com.toyshopping.toy_shopping.data.dto.UserDto;
+import com.toyshopping.toy_shopping.data.dto.UsersDto;
 import com.toyshopping.toy_shopping.data.entity.Users;
 import com.toyshopping.toy_shopping.repository.UserRepository;
 import org.slf4j.Logger;
@@ -32,16 +32,17 @@ public class FindIdPwServiceImpl implements FindIdPwService{
     }
 
     @Override
-    public UserDto search_User_Pw(String id, String name, String phone) {
+    public UsersDto search_User_Pw(String id, String name, String phone) {
         Users users = userRepository.findUserByUidAndNameAndPhone(id, name, phone);
         if (users != null) {
-            UserDto userDto = new UserDto();
-            userDto.setUserNo(users.getId());
-            userDto.setUserId(users.getUid());
-            userDto.setUserPw(users.getPassword());
-            userDto.setRoles(users.getRoles());
-            userDto.setUserName(users.getName());
-            userDto.setPhone(users.getPhone());
+            UsersDto userDto = UsersDto.builder()
+                    .uid(users.getUid())
+                    .id(users.getId())
+                    .name(users.getName())
+                    .roles(users.getRoles())
+                    .phone(users.getPhone())
+                    .build();
+
 
             return userDto;
         }
@@ -49,19 +50,19 @@ public class FindIdPwServiceImpl implements FindIdPwService{
     }
 
     @Override
-    public UserDto changeUserPw(String id, String phone, String password) {
+    public UsersDto changeUserPw(String id, String phone, String password) {
         Users users = userRepository.findUserByUidAndPhone(id, phone);
         if (users != null) {
             users.setPassword(passwordEncoder.encode(password));
             Users changePassword = userRepository.save(users);
 
-            UserDto userDto = new UserDto();
-            userDto.setUserNo(changePassword.getId());
-            userDto.setUserId(changePassword.getUid());
-            userDto.setUserPw(changePassword.getPassword());
-            userDto.setRoles(changePassword.getRoles());
-            userDto.setUserName(changePassword.getName());
-            userDto.setPhone(changePassword.getPhone());
+            UsersDto userDto = UsersDto.builder()
+                    .uid(users.getUid())
+                    .id(users.getId())
+                    .name(users.getName())
+                    .roles(users.getRoles())
+                    .phone(users.getPhone())
+                    .build();
 
             return userDto;
         }
