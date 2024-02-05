@@ -3,7 +3,9 @@ package com.toyshopping.toy_shopping.service;
 import com.toyshopping.toy_shopping.common.CommonResponse;
 import com.toyshopping.toy_shopping.config.security.JwtTokenProvider;
 import com.toyshopping.toy_shopping.data.dto.JwtTokenDto;
+import com.toyshopping.toy_shopping.data.dto.SignUpDto;
 import com.toyshopping.toy_shopping.data.dto.SignUpResultDto;
+import com.toyshopping.toy_shopping.data.dto.UsersDto;
 import com.toyshopping.toy_shopping.data.entity.Users;
 import com.toyshopping.toy_shopping.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,13 +34,20 @@ public class SignServiceImpl implements SignService {
 
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
-    public PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
 
-
+    @Transactional
     @Override
-    public SignUpResultDto signUp(String id, String password, String name, String phone, String role) {
-        LOGGER.info("[getSignUpResult] 회원 가입 정보 전달");
+    public UsersDto signUp(SignUpDto signUpDto) {
+        if (userRepository.existsByUid(signUpDto.getUid())){
+            throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
+        }
+        String encodedPassword = passwordEncoder.encode(signUpDto.getPassword());
+        List<String> roles = new ArrayList<>();
+        roles.add("USER");
+        return UsersDto.toDto(userRepository.save(signUpDto.toEntity(encodedPassword, roles)));
+        /*LOGGER.info("[getSignUpResult] 회원 가입 정보 전달");
         Users users;
         if (role.equalsIgnoreCase("admin")) {
             users = Users.builder()
@@ -66,9 +77,8 @@ public class SignServiceImpl implements SignService {
         } else {
             LOGGER.info("[getSignUpresult] 실패 처리 완료");
             setFailResult(signUpResultDto);
-        }
+        }*/
 
-        return signUpResultDto;
     }
 
     @Transactional

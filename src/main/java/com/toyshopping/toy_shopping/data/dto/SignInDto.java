@@ -17,6 +17,6 @@ import lombok.*;
     }
 }*/
 public class SignInDto {
-    private String username;
+    private String uid;
     private String password;
 }
