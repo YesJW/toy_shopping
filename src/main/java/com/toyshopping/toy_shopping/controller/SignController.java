@@ -1,5 +1,6 @@
 package com.toyshopping.toy_shopping.controller;
 
+import com.toyshopping.toy_shopping.config.security.JwtTokenProvider;
 import com.toyshopping.toy_shopping.config.security.SecurityUtil;
 import com.toyshopping.toy_shopping.data.dto.*;
 import com.toyshopping.toy_shopping.service.SignService;
@@ -24,12 +25,16 @@ import java.util.Map;
 public class SignController {
 
     private final Logger LOGGER = LoggerFactory.getLogger(SignController.class);
-    private final SignService signService;
 
     @Autowired
-    public SignController(SignService signService) {
-        this.signService = signService;
-    }
+    private SignService signService;
+
+
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
+
+
 
     @PostMapping(value = "/sign-in")
     @ResponseBody
@@ -50,6 +55,7 @@ public class SignController {
         JwtTokenDto jwtTokenDto = signService.signIn(uid, password);
         LOGGER.info("request username = {}, password = {}", uid, password);
         LOGGER.info("jwtToken accessToken = {}, refreshToken = {}", jwtTokenDto.getAccessToken(), jwtTokenDto.getRefreshToken());
+
         return ResponseEntity.ok().body(jwtTokenDto);
 
     }

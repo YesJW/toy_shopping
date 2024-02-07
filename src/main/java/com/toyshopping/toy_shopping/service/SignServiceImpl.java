@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +38,7 @@ public class SignServiceImpl implements SignService {
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
 
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Transactional
     @Override
@@ -84,37 +87,16 @@ public class SignServiceImpl implements SignService {
     @Transactional
     @Override
     public JwtTokenDto signIn(String id, String password) {
-        /*LOGGER.info("[getSignInResult] signDataHandler 로 회원 정보 요청");
-        User user = userRepository.getByUid(id);
-        LOGGER.info("[getSignInResult] id : {} ", id);
 
-        LOGGER.info("[getSignInResult] 패스워드 비교 수행");
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new RuntimeException();
-        }
-        LOGGER.info("[getSignInResult] 패스워드 일치");
-
-        LOGGER.info("[getSignInResult] SignInResultDto 객체 생성");
-        SignInResultDto signInResultDto = SignInResultDto.builder()
-                .token(jwtTokenProvider.createToken(String.valueOf(user.getUid()), user.getRoles()))
-                .build();
-
-        LOGGER.info("[getSignInResult] SignInResult 객체에 값 주입");
-        setSuccessResult(signInResultDto);
-
-        return signInResultDto;*/
-
-        // id + password 기반 Authentication 객체 생성
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(id, password);
 
-        // 2. 실제 검증. authenticate() 메서드를 통해 요청된 Member 에 대한 검증 진행
-        // authenticate 메서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드 실행
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-        // 3. 인증 정보를 기반으로 JWT 토큰 생성
         JwtTokenDto jwtToken = jwtTokenProvider.generateToken(authentication);
 
-        LOGGER.info("jwtToken:"+jwtToken);
+        // refresh 토큰을 redis에 저장
+        UsersDto usersDto = UsersDto.toDto(userRepository.getByUid(id));
+        redisTemplate.opsForValue().set("RefreshT:" + usersDto.getUid(), jwtToken.getRefreshToken());
 
         return jwtToken;
     }

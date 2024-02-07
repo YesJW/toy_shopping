@@ -29,6 +29,7 @@
 				success: function(data, status, xhr) {
 					console.log('Success: ' + data);
 					localStorage.setItem("jwt", data.grantType+" "+data.accessToken)
+					window.location.href="/main"
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
 					alert("아이디 비밀번호를 확인해주세요.");

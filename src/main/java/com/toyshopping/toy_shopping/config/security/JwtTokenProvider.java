@@ -9,10 +9,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -32,6 +34,8 @@ public class JwtTokenProvider {
     private  Key key;
 
     private final Logger LOGGER = LoggerFactory.getLogger(JwtTokenProvider.class);
+
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Value("${springboot.jwt.secret}")
     private String secretKey = "sercretKey";
@@ -67,24 +71,27 @@ public class JwtTokenProvider {
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
+        Date expiration = new Date(now + tokenValidMillisecond*60*6);
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
-                .setExpiration(new Date(now + 86400000))
+                .setExpiration(expiration)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
-        return JwtTokenDto.builder()
+        JwtTokenDto jwtTokenDto = JwtTokenDto.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .refreshTime(expiration)
                 .build();
+        System.out.println(jwtTokenDto.getRefreshToken());
+        return jwtTokenDto;
     }
     public Authentication getAuthentication(String token) { // 필터에서 인증이 성공했을 때 securityContextHolder에 저장할 Authentication을 생성
         LOGGER.info("[getAuthentication] 토큰 인증 정보 조회 시작");
         Claims claims = parseClaims(token);
         if(claims.get("auth") == null){
             throw new RuntimeException("권한 정보 없음");
-
         }
 
         Collection<? extends GrantedAuthority> authorities = Arrays.stream(claims.get("auth").toString().split(","))
@@ -109,6 +116,7 @@ public class JwtTokenProvider {
             log.info("Invalid JWT Token", e);
         } catch (ExpiredJwtException e) {
             log.info("Expired JWT Token", e);
+
         } catch (UnsupportedJwtException e) {
             log.info("Unsupported JWT Token", e);
         } catch (IllegalArgumentException e) {
@@ -128,4 +136,6 @@ public class JwtTokenProvider {
         }
     }
 
+
 }
+//Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MiIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE3MDczMDEyNDN9.U_wYr4GTA3SvKfY4plM-u3SW0CFgMAXXuCXhGl20H_4

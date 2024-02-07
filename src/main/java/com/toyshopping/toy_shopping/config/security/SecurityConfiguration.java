@@ -46,10 +46,10 @@ public class SecurityConfiguration {
                 .antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**", "/sign-api/exception"
                         ,"/css/**", "/js/**", "/images/**", "/lib/**").permitAll()
                 .antMatchers("/sign-api/**").permitAll()
+                .antMatchers("/auth/**").permitAll()
                 .antMatchers("/contactPage","/contactAns","/cart","/addProductPage","/productDetail","/updatePage",
-                        "/searchPage","/main","/getProductPage","/userDetail","/sales","/getFindIdPage","/getPwPage","/getResetPwPage").permitAll()
+                        "/searchPage","/main","/getProductPage","/mypage","/sales","/getFindIdPage","/getPwPage","/getResetPwPage").permitAll()
                 .antMatchers("/").permitAll()
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
