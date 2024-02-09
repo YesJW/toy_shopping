@@ -8,7 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
@@ -21,6 +23,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -40,6 +44,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             //String check_Logout = redisTemplate.opsForValue().get(token).toString();
 
             Authentication authentication = jwtTokenProvider.getAuthentication(token);
+            System.out.println("####################authen : "+authentication);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
@@ -53,4 +58,5 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         }
         return null;
     }
+
 }
