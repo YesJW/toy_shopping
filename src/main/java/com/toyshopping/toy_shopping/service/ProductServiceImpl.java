@@ -5,9 +5,11 @@ import com.toyshopping.toy_shopping.data.dto.ProductResponseDto;
 import com.toyshopping.toy_shopping.data.entity.Product;
 import com.toyshopping.toy_shopping.data.entity.Users;
 import com.toyshopping.toy_shopping.repository.ProductRepository;
+import com.toyshopping.toy_shopping.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,12 +25,14 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
 
+    private UserRepository userRepository;
     private final Logger LOGGER = LoggerFactory.getLogger(ProductServiceImpl.class);
 
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, UserRepository userRepository) {
         this.productRepository = productRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -67,8 +71,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponseDto saveProduct(ProductDto productDto, MultipartFile imgFile) throws IOException {
-        Users users = (Users)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        LOGGER.info("[UserNo 가져오기] text : {}", users.getId());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Users users = userRepository.getByUid(authentication.getName());
         String imgOriName = imgFile.getOriginalFilename();
         String imgName = "";
 
