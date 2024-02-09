@@ -33,7 +33,6 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
     private final JwtTokenProvider jwtTokenProvider;
-    private final JwtExceptionFilter jwtExceptionFilter;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
@@ -44,11 +43,11 @@ public class SecurityConfiguration {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**", "/sign-api/exception"
-                        ,"/css/**", "/js/**", "/images/**", "/lib/**").permitAll()
+                        , "/css/**", "/js/**", "/images/**", "/lib/**").permitAll()
                 .antMatchers("/sign-api/**").permitAll()
                 .antMatchers("/auth/**").permitAll()
-                .antMatchers("/contactPage","/contactAns","/cart","/addProductPage","/productDetail","/updatePage",
-                        "/searchPage","/main","/getProductPage","/mypage","/sales","/getFindIdPage","/getPwPage","/getResetPwPage").permitAll()
+                .antMatchers("/contactPage", "/contactAns", "/cart", "/addProductPage", "/productDetail", "/updatePage",
+                        "/searchPage", "/main", "/getProductPage", "/mypage", "/sales", "/getFindIdPage", "/getPwPage", "/getResetPwPage").permitAll()
                 .antMatchers("/").permitAll()
                 .anyRequest().authenticated()
                 .and()
