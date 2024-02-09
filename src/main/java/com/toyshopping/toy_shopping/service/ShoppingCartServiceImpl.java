@@ -7,8 +7,10 @@ import com.toyshopping.toy_shopping.data.entity.ShoppingCart;
 import com.toyshopping.toy_shopping.data.entity.Users;
 import com.toyshopping.toy_shopping.repository.ProductRepository;
 import com.toyshopping.toy_shopping.repository.ShoppingCartRepository;
+import com.toyshopping.toy_shopping.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -22,9 +24,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
     private final ShoppingCartRepository shoppingCartRepository;
 
     private final ProductRepository productRepository;
+    private UserRepository userRepository;
 
     private Logger LOGGER = LoggerFactory.getLogger(ShoppingCartServiceImpl.class);
-    public ShoppingCartServiceImpl(ShoppingCartRepository shoppingCartRepository, ProductRepository productRepository) {
+    public ShoppingCartServiceImpl(ShoppingCartRepository shoppingCartRepository, ProductRepository productRepository, UserRepository userRepository) {
+        this.userRepository = userRepository;
         this.shoppingCartRepository = shoppingCartRepository;
         this.productRepository = productRepository;
     }
@@ -32,7 +36,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
     @Override
     public ShoppingCartResponseDto addShoppingCartProduct(ShoppingCartDto shoppingCartDto) {
         LOGGER.info("[addShoppingCratProduct] 쇼핑카트에 제품 추가");
-        Users users = (Users) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Users users = userRepository.getByUid(authentication.getName());
         Product product = productRepository.getById(shoppingCartDto.getPNum());
         ShoppingCart shoppingCart = new ShoppingCart();
         shoppingCart.setUno(users);
