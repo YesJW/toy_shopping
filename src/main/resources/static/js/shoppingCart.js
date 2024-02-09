@@ -7,8 +7,8 @@ $(document).ready(function() {
             url: '/getCart',
             type: 'GET',
             beforeSend: function (xhr){
-                const token = localStorage.getItem('X-AUTH-TOKEN');
-                xhr.setRequestHeader("X-AUTH-TOKEN", token);
+                const token = localStorage.getItem('jwt');
+                xhr.setRequestHeader("Authorization", token);
             },
             success: function (data, status, xhr) {
                 // 쇼핑카트 목록이 비어있을 경우
@@ -113,8 +113,8 @@ $(document).ready(function() {
             type: 'DELETE',
             data: {cnum: itemId},
             beforeSend: function (xhr){
-                const token = localStorage.getItem('X-AUTH-TOKEN');
-                xhr.setRequestHeader("X-AUTH-TOKEN", token);
+                const token = localStorage.getItem('jwt');
+                xhr.setRequestHeader("Authorization", token);
             },
             success: function (data, status, xhr) {
                 // 쇼핑카트 목록을 다시 가져와서 화면에 표시

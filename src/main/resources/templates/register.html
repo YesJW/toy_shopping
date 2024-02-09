@@ -24,6 +24,33 @@
 
       return true; // 폼 제출을 허용
     }
+     function submitForm() {
+      var id = $('#id').val();
+      var password = $('#password').val();
+      var phone = $('#phone').val();
+      var name = $('#name').val()
+      $.ajax({
+      headers: {
+      'Content-Type': 'application/json'
+    },
+      url: '/sign-api/sign-up',
+      type: 'POST',
+      data: JSON.stringify({
+        'uid': id,
+        'password': password,
+        'phone': phone,
+        'name': name
+    }),
+      success: function(data, status, xhr) {
+      console.log('Success: ' + data);
+      window.location.href="/main"
+    },
+      error: function(xhr, textStatus, errorThrown,data) {
+      console.log('Error: ' + errorThrown);
+      console.log(data)
+    }
+    });
+    }
   </script>
   <title>sign up</title>
 </head>
@@ -41,19 +68,20 @@
         <a href="" id="logout-btn">Logout</a>
       </li>
       <li><a href="/sign-api/register" id="register-btn">Sign up</a></li>
-      <li><a href="/mypage" id ="mypage-btn">My Page</a></li>
+      <li><a href="/mypage" id="mypage-btn">My Page</a></li>
     </ul>
   </nav>
 </header>
-<h1>Sign Up</h1> <hr>
+<h1>Sign Up</h1>
+<hr>
 
-<form th:action="@{/sign-api/sign-up}" method="POST" onsubmit="return checkPassword();">
-  userName : <input type = "text" name="name"><br>
-  id : <input type="text" name="email"> <br>
-  password : <input type="password" name="password"> <br>
+<form method="POST">
+  userName : <input type = "text" id = "name" name="name"><br>
+  id : <input type="text" id = "id" name="id"> <br>
+  password : <input type="password" id = "password" name="password"> <br>
   password2 : <input type="password" name="password2"> <br>
-  phone : <input type="text" name="phone"><br>
-  <button type="submit">Join</button>
+  phone : <input type="text" id= "phone" name="phone"><br>
+  <button type="button" onclick="submitForm()">회원가입</button>
 </form> <br>
 
 <a href="/login">Go to login →</a>

@@ -9,8 +9,8 @@ $(document).ready(function() {
         data: { id: productId },
         dataType: 'json',
         beforeSend: function (xhr){
-            const token = localStorage.getItem('X-AUTH-TOKEN');
-            xhr.setRequestHeader("X-AUTH-TOKEN", token);
+            const token = localStorage.getItem('jwt');
+            xhr.setRequestHeader("Authorization", token);
         },
         success: function(product) {
             // 상세 페이지를 상품 정보로 업데이트합니다.
@@ -50,8 +50,8 @@ $(document).ready(function() {
             data: { pnum: productId, stock: quantity, name: productName, price : productPrice, uno : productId },
             dataType:'json',
             beforeSend: function (xhr){
-                const token = localStorage.getItem('X-AUTH-TOKEN');
-                xhr.setRequestHeader("X-AUTH-TOKEN", token);
+                const token = localStorage.getItem('jwt');
+                xhr.setRequestHeader("Authorization", token);
             },
             success: function() {
                 alert('상품을 성공적으로 구매했습니다.');

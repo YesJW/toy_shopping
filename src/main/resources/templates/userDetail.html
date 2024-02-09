@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="/css/style.css">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="/js/headerjs.js"></script>
+  <script src="/js/tokencheck.js"></script>
   <script>myHeader()</script>
   <script>
     $(document).ready(function() {
@@ -15,18 +16,19 @@
       $.ajax({
         url: '/mypage/user_detail',
         type: 'GET',
+        dataType: "json",
         beforeSend: function myFunction(xhr) {
-          const token = localStorage.getItem('X-AUTH-TOKEN'); // localStorage에서 토큰을 가져옴
-          xhr.setRequestHeader("X-AUTH-TOKEN", token);
+          const token = localStorage.getItem('jwt'); // localStorage에서 토큰을 가져옴
+          xhr.setRequestHeader("Authorization", token);
         },
         success: function (data, status, xhr) {
           console.log('Success: ' + data);
-          document.getElementById('name').innerText = data.userName;
-          document.getElementById('id').innerText = data.userId;
+          document.getElementById('name').innerText = data.name;
+          document.getElementById('id').innerText = data.uid;
           document.getElementById('role').innerText = data.roles;
         },
-        error: function (jqXHR, textStatus, errorThrown) {
-          console.log('Error: ' + errorThrown);
+        error: function (xhr, textStatus, errorThrown) {
+          checkToken(xhr)
         }
       });
 

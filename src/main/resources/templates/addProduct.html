@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="/css/addProductStyle.css">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="/js/headerjs.js"></script>
+  <script src="/js/tokencheck.js"></script>
   <script>
     myHeader();
   </script>
@@ -63,8 +64,8 @@
         processData: false, // 필수: FormData가 문자열로 변환되는 것을 막음
         contentType: false, // 필수: Content-Type 헤더를 설정하지 않음
         beforeSend: function(xhr) {
-          const token = localStorage.getItem('X-AUTH-TOKEN');
-          xhr.setRequestHeader("X-AUTH-TOKEN", token);
+          const token = localStorage.getItem('jwt');
+          xhr.setRequestHeader("Authorization", token);
         },
         success: function(data, status, xhr) {
           console.log(data)
@@ -72,8 +73,8 @@
           alert('상품이 등록되었습니다.');
           window.location.href='/main';
         },
-        error: function(jqXHR, textStatus, errorThrown) {
-          console.log(errorThrown)
+        error: function(xhr, textStatus, errorThrown) {
+          checkToken(xhr)
           alert('상품 등록을 실패하였습니다.');
         }
       });
