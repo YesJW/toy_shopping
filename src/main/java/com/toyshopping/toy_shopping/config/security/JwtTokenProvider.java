@@ -35,8 +35,6 @@ public class JwtTokenProvider {
 
     private final Logger LOGGER = LoggerFactory.getLogger(JwtTokenProvider.class);
 
-    private final RedisTemplate<String, Object> redisTemplate;
-
     @Value("${springboot.jwt.secret}")
     private String secretKey = "sercretKey";
 
@@ -71,7 +69,7 @@ public class JwtTokenProvider {
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
-        Date expiration = new Date(now + tokenValidMillisecond*60*6);
+        Date expiration = new Date(now + tokenValidMillisecond*2);
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
                 .setExpiration(expiration)
@@ -84,7 +82,6 @@ public class JwtTokenProvider {
                 .refreshToken(refreshToken)
                 .refreshTime(expiration)
                 .build();
-        System.out.println(jwtTokenDto.getRefreshToken());
         return jwtTokenDto;
     }
     public Authentication getAuthentication(String token) { // 필터에서 인증이 성공했을 때 securityContextHolder에 저장할 Authentication을 생성

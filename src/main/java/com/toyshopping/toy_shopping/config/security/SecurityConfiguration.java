@@ -33,7 +33,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
     private final JwtTokenProvider jwtTokenProvider;
-
+    private final JwtExceptionFilter jwtExceptionFilter;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
@@ -53,8 +53,8 @@ public class SecurityConfiguration {
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+                //.addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class)
                 .build();
-
     }
 
     @Bean
