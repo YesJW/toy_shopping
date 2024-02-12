@@ -54,8 +54,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
     }
 
     @Override
-    public List<ShoppingCartResponseDto> getShoppingCartProduct(Long user_no) {
-        List<ShoppingCart> shoppingCarts = shoppingCartRepository.findAllByUno_id(user_no);
+    public List<ShoppingCartResponseDto> getShoppingCartProduct() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Users users = userRepository.getByUid(authentication.getName());
+
+        List<ShoppingCart> shoppingCarts = shoppingCartRepository.findAllByUno_id(users.getId());
         List<ShoppingCartResponseDto> shoppingCartDtos= new ArrayList<>();
         for (ShoppingCart shoppingCart : shoppingCarts) {
             ShoppingCartResponseDto shoppingCartResponseDto = new ShoppingCartResponseDto();

@@ -48,8 +48,7 @@ public class ShoppingCartController {
     @GetMapping(value = "/getCart")
     @ResponseBody
     public ResponseEntity<List<ShoppingCartResponseDto>> getCart() {
-        Users users = (Users) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<ShoppingCartResponseDto> shoppingCartProducts = shoppingCartService.getShoppingCartProduct(users.getId());
+        List<ShoppingCartResponseDto> shoppingCartProducts = shoppingCartService.getShoppingCartProduct();
 
         return ResponseEntity.status(HttpStatus.OK).body(shoppingCartProducts);
     }

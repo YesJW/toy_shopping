@@ -36,9 +36,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductResponseDto> getUserProduct(Long user_no) {
+    public List<ProductResponseDto> getUserProduct() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Users users = userRepository.getByUid(authentication.getName());
 
-        List<Product> products = productRepository.findAllByUno_id(user_no);
+        List<Product> products = productRepository.findAllByUno_id(users.getId());
         List<ProductResponseDto> productResponseDtos = new ArrayList<>();
         for (Product p : products){
             ProductResponseDto productResponseDto = new ProductResponseDto();

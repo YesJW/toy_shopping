@@ -9,7 +9,7 @@ import java.util.List;
 public interface ShoppingCartService {
     ShoppingCartResponseDto addShoppingCartProduct(ShoppingCartDto shoppingCartDto);
 
-    List<ShoppingCartResponseDto> getShoppingCartProduct(Long user_no);
+    List<ShoppingCartResponseDto> getShoppingCartProduct();
     ShoppingCartResponseDto changeCartProduct(Long cNum, int stock);
     void deleteShoppingCartProduct(Long number) throws Exception;
 }
