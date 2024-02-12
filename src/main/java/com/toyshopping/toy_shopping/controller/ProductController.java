@@ -34,9 +34,8 @@ public class ProductController {
     @GetMapping(value = "/getUserProducts")
     @ResponseBody
     public ResponseEntity<List<ProductResponseDto>> getUserProduct() {
-        Users users = (Users) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        List<ProductResponseDto> productResponseDto = productService.getUserProduct(users.getId());
+        List<ProductResponseDto> productResponseDto = productService.getUserProduct();
 
         return ResponseEntity.status(HttpStatus.OK).body(productResponseDto);
 
