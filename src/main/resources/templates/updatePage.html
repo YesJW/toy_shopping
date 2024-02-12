@@ -4,36 +4,12 @@
   <meta charset="UTF-8">
   <title>Edit Product</title>
   <link rel="stylesheet" href="/css/updateProductStyle.css">
+  <link rel="stylesheet" href="/css/style.css">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="/js/headerjs.js"></script>
   <script>
     myHeader();
   </script>
-<!--  <style>-->
-<!--    label {-->
-<!--      display: block;-->
-<!--      margin-bottom: 10px;-->
-<!--    }-->
-
-<!--    input[type="text"],-->
-<!--    input[type="number"] {-->
-<!--      width: 100%;-->
-<!--      padding: 5px;-->
-<!--      margin-bottom: 10px;-->
-<!--    }-->
-
-<!--    button {-->
-<!--      padding: 10px 20px;-->
-<!--      background-color: #4CAF50;-->
-<!--      color: white;-->
-<!--      border: none;-->
-<!--      cursor: pointer;-->
-<!--    }-->
-
-<!--    button:hover {-->
-<!--      background-color: #45a049;-->
-<!--    }-->
-<!--  </style>-->
 </head>
 
 <body>
@@ -54,7 +30,6 @@
     </ul>
   </nav>
 </header>
-<h1>Edit Product</h1>
 <form id="edit-product-form">
   <label for="product-id">Product ID:</label>
   <input type="text" id="product-id" name="product-id" readonly>
@@ -80,8 +55,8 @@
       type: 'GET',
       data: {id : productId},
       beforeSend: function myFunction(xhr) {
-        const token = localStorage.getItem('X-AUTH-TOKEN'); // localStorage에서 토큰을 가져옴
-        xhr.setRequestHeader("X-AUTH-TOKEN", token);
+        const token = localStorage.getItem('jwt'); // localStorage에서 토큰을 가져옴
+        xhr.setRequestHeader("Authorization", token);
 
       },
       success: function (data, status, xhr) {
@@ -94,6 +69,7 @@
         $('#product-stock').val(data.stock);
       },
       error: function(jqXHR, textStatus, errorThrown) {
+        checkToken()
         console.log('Error: ' + errorThrown);
       }
     });
@@ -121,20 +97,17 @@
         data: JSON.stringify(changeProductDto),
         contentType: 'application/json',
         beforeSend: function myFunction(xhr) {
-          const token = localStorage.getItem('X-AUTH-TOKEN'); // localStorage에서 토큰을 가져옴
-          xhr.setRequestHeader("X-AUTH-TOKEN", token);
+          const token = localStorage.getItem('jwt'); // localStorage에서 토큰을 가져옴
+          xhr.setRequestHeader("Authorization", token);
 
         },
         success: function(data, status, xhr) {
-          console.log('Product edited successfully');
-
-          // 업데이트 성공 시 추가적인 로직 수행
-          // 예: 화면 새로고침 또는 업데이트된 정보 표시
+          alert("상품이 업데이트 되었습니다.")
+          location.reload();
         },
         error: function(jqXHR, textStatus, errorThrown) {
-          console.log('Error editing product: ' + errorThrown);
-          // 업데이트 실패 시 추가적인 로직 수행
-          // 예: 오류 메시지 표시 또는 재시도 옵션 제공
+          checkToken()
+
         }
       });
     });

@@ -6,10 +6,13 @@
   <link rel="stylesheet" href="/css/style.css">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script>
+    $(function(){
+      $('html').removeClass('no-js');
+    });
     $(document).ready(function() {
       var answer = false;
       // 페이지 로드 시 실행되는 코드
-      var token = localStorage.getItem('X-AUTH-TOKEN'); // 로컬 스토리지에서 토큰 가져오기
+      var token = localStorage.getItem('jwt'); // 로컬 스토리지에서 토큰 가져오기
       var num = getNUmFromURL('num'); // URL에서 num 매개변수 값을 추출
       // AJAX 요청 설정
       $.ajax({
@@ -17,7 +20,7 @@
         type: 'GET',
         data: {num : num},
         beforeSend: function(xhr) {
-          xhr.setRequestHeader('X-AUTH-TOKEN', token);
+          xhr.setRequestHeader('Authorization', token);
         },
         success: function(data, status, xhr) {
           answer = data.ans;
@@ -38,11 +41,11 @@
         url: '/mypage/user_detail',
         type: 'GET',
         beforeSend: function myFunction(xhr) {
-          const token = localStorage.getItem('X-AUTH-TOKEN'); // localStorage에서 토큰을 가져옴
-          xhr.setRequestHeader("X-AUTH-TOKEN", token);
+          const token = localStorage.getItem('jwt'); // localStorage에서 토큰을 가져옴
+          xhr.setRequestHeader("Authorization", token);
         },
         success: function (data){
-          if(data.roles.includes('ROLE_ADMIN') && answer === false){
+          if(data.roles.includes('ADMIN') && answer === false){
             $('#contact-answer-form').show();
             $('#contact-sender').text(data.sender);
             $('#submit-answer').click(function() {
@@ -53,7 +56,7 @@
                 type: 'PUT',
                 data: {num : num, message: answer},
                 beforeSend: function(xhr) {
-                  xhr.setRequestHeader('X-AUTH-TOKEN', token);
+                  xhr.setRequestHeader('Authorization', token);
                 },
                 success: function(response) {
                   answer = true;
