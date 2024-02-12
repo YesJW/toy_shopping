@@ -5,11 +5,13 @@ import com.toyshopping.toy_shopping.data.dto.ContactDto;
 import com.toyshopping.toy_shopping.data.dto.ContactReplyDto;
 import com.toyshopping.toy_shopping.data.entity.Users;
 import com.toyshopping.toy_shopping.service.ContactService;
+import com.toyshopping.toy_shopping.service.UserDetailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -42,19 +44,10 @@ public class ContactController {
 
     @GetMapping(value = "/getAllContact")
     @ResponseBody
-    public <T> ResponseEntity<T> getAllContact() {
-        Users usersDto = (Users) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        LOGGER.info("[ContactController] getAllContact 호출" + usersDto.getRoles().get(0));
+    public ResponseEntity<List<ContactDto>> getAllContact() {
 
-        if(usersDto.getRoles().get(0).equals("ROLE_USER")) {
-            List<ContactDto> contactDtos = contactService.getAllContact(usersDto.getId());
-            return (ResponseEntity<T>) ResponseEntity.status(HttpStatus.OK).body(contactDtos);
-        }
-        else{
-            List<ContactAdminDto> contactAdminDtos = contactService.getAdminContact(usersDto.getName().toString());
-            return (ResponseEntity<T>) ResponseEntity.status(HttpStatus.OK).body(contactAdminDtos);
-
-        }
+        List<ContactDto> contactDtos = contactService.getAllContact();
+        return ResponseEntity.status(HttpStatus.OK).body(contactDtos);
 
     }
 
@@ -69,28 +62,13 @@ public class ContactController {
 
     }
 
-    @GetMapping(value = "/getAdminContact")
-    @ResponseBody
-    public ResponseEntity<List<ContactAdminDto>> getAdminContact() {
-        LOGGER.info("[ContactController] getAdminContact 호출");
-        List<ContactAdminDto> contactAdminDtos = contactService.getAdminContact("admin");
-
-        return ResponseEntity.status(HttpStatus.OK).body(contactAdminDtos);
-    }
-
     @PostMapping(value = "/sendContact")
     @ResponseBody
     public ResponseEntity<ContactDto> sendContact(@RequestParam("title") String title, @RequestParam("message") String message) {
-        LOGGER.info("[ContactController] sendContact 호출");
-        Users usersDto = (Users) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         ContactDto contactDto = new ContactDto();
         contactDto.setTitle(title);
         contactDto.setMessage(message);
-        contactDto.setName(usersDto.getName());
-        if (usersDto.getName() != "admin") {
-            contactDto.setTo_Name("admin");
-        }
-        ContactDto save_con = contactService.saveContact(contactDto);
+        ContactDto save_con = contactService.sendContact(contactDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(save_con);
     }

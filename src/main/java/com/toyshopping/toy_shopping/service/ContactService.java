@@ -8,12 +8,10 @@ import java.util.List;
 
 public interface ContactService {
 
-    List<ContactDto> getAllContact(Long id);
+    List<ContactDto> getAllContact();
 
     ContactDto getContact(Long num);
-    ContactDto saveContact(ContactDto contactDto);
-
-    List<ContactAdminDto> getAdminContact(String name);
+    ContactDto sendContact(ContactDto contactDto);
 
     ContactReplyDto replyContact(Long number, String message);
 

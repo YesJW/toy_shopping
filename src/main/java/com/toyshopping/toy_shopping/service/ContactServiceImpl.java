@@ -6,7 +6,9 @@ import com.toyshopping.toy_shopping.data.dto.ContactReplyDto;
 import com.toyshopping.toy_shopping.data.entity.Contact;
 import com.toyshopping.toy_shopping.data.entity.Users;
 import com.toyshopping.toy_shopping.repository.ContactRepository;
+import com.toyshopping.toy_shopping.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
@@ -20,31 +22,63 @@ public class ContactServiceImpl implements ContactService{
 
     private ContactRepository contactRepository;
 
+    private UserRepository userRepository;
+
     @Autowired
-    public ContactServiceImpl(ContactRepository contactRepository) {
+    public ContactServiceImpl(ContactRepository contactRepository, UserRepository userRepository) {
         this.contactRepository = contactRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public List<ContactDto> getAllContact(Long id) {
-        List<Contact> contacts = contactRepository.findAllByUno_id(id);
-        List<ContactDto> contactDtos = new ArrayList<>();
-        for(Contact c : contacts){
-            ContactDto contactDto = new ContactDto();
-            contactDto.setNum(c.getNum());
-            contactDto.setTitle(c.getTitle());
-            contactDto.setMessage(c.getMessage());
-            contactDto.setAns(c.getAnswer());
-            contactDto.setName(c.getName());
-            contactDto.setTime(c.getTime());
-            contactDto.setReply_time(c.getReply_time());
-            contactDto.setTo_Name(c.getToName());
-            contactDto.setReply_time(c.getReply());
-            contactDtos.add(contactDto);
+    public List<ContactDto> getAllContact() {
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Users users = userRepository.getByUid(authentication.getName());
+        System.out.println(users.getRoles());
+        if (users.getRoles().get(0).equals("USER")) {
+            List<Contact> contacts = contactRepository.findAllByUno_id(users.getId());
+            List<ContactDto> contactDtos = new ArrayList<>();
+            for(Contact c : contacts){
+                ContactDto contactDto = new ContactDto();
+                contactDto.setNum(c.getNum());
+                contactDto.setTitle(c.getTitle());
+                contactDto.setMessage(c.getMessage());
+                contactDto.setAns(c.getAnswer());
+                contactDto.setName(c.getName());
+                contactDto.setTime(c.getTime());
+                contactDto.setReply_time(c.getReply_time());
+                contactDto.setTo_Name(c.getToName());
+                contactDto.setReply_time(c.getReply());
+                contactDtos.add(contactDto);
+
+            }
+            if (contactDtos.isEmpty()) {
+                return null;
+            }
+            return contactDtos;
         }
 
-        return contactDtos;
+        else{
+            System.out.println(users.getId());
+            List<Contact> contacts = contactRepository.findAllByToName("admin");
+            List<ContactDto> contactAdminDtos = new ArrayList<>();
+            for (Contact c : contacts) {
+                ContactDto contactAdminDto = new ContactDto();
+                contactAdminDto.setNum(c.getNum());
+                contactAdminDto.setTitle(c.getTitle());
+                contactAdminDto.setMessage(c.getMessage());
+                contactAdminDto.setName(c.getName());
+                contactAdminDto.setTime(c.getTime());
+                contactAdminDto.setAns(c.getAnswer());
+                contactAdminDtos.add(contactAdminDto);
+            }
+            if (contactAdminDtos.isEmpty()) {
+                return null;
+            }
+            return contactAdminDtos;
+        }
+
     }
 
     @Override
@@ -63,15 +97,16 @@ public class ContactServiceImpl implements ContactService{
     }
 
     @Override
-    public ContactDto saveContact(ContactDto contactDto) {
-        Users users = (Users) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ContactDto sendContact(ContactDto contactDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Users users = userRepository.getByUid(authentication.getName());
         String nowTime = nowTime();
         Contact contact = new Contact();
         contact.setUno(users);
         contact.setMessage(contactDto.getMessage());
-        contact.setName(contactDto.getName());
+        contact.setName(users.getName());
         contact.setTitle(contactDto.getTitle());
-        contact.setToName(contactDto.getTo_Name());
+        contact.setToName("admin");
         contact.setAnswer(false);
         contact.setTime(nowTime);
         Contact saveContact = contactRepository.save(contact);
@@ -83,23 +118,6 @@ public class ContactServiceImpl implements ContactService{
         responseContactDto.setTo_Name(saveContact.getToName());
 
         return responseContactDto;
-    }
-
-    @Override
-    public List<ContactAdminDto> getAdminContact(String name) {
-        List<Contact> contacts = contactRepository.findAllByToName("admin");
-        List<ContactAdminDto> contactAdminDtos = new ArrayList<>();
-        for (Contact c : contacts) {
-            ContactAdminDto contactAdminDto = new ContactAdminDto();
-            contactAdminDto.setNum(c.getNum());
-            contactAdminDto.setTitle(c.getTitle());
-            contactAdminDto.setMessage(c.getMessage());
-            contactAdminDto.setName(c.getName());
-            contactAdminDto.setTime(c.getTime());
-            contactAdminDto.setAns(c.getAnswer());
-            contactAdminDtos.add(contactAdminDto);
-        }
-        return contactAdminDtos;
     }
 
     @Override
