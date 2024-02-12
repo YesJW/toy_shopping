@@ -38,7 +38,7 @@ public class JwtTokenProvider {
     @Value("${springboot.jwt.secret}")
     private String secretKey = "sercretKey";
 
-    private final long tokenValidMillisecond = 1000L * 10;
+    private final long tokenValidMillisecond = 1000L * 60;
 
     @PostConstruct
     protected void init(){
@@ -132,7 +132,4 @@ public class JwtTokenProvider {
             return e.getClaims();
         }
     }
-
-
 }
-//Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MiIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE3MDczMDEyNDN9.U_wYr4GTA3SvKfY4plM-u3SW0CFgMAXXuCXhGl20H_4
