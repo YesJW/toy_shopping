@@ -194,12 +194,11 @@
     // AJAX를 사용하여 서버로부터 문의 목록을 가져옵니다
     $.ajax({
       url: '/getAllContact',
-      // url: '/getAdminContact',
       type: 'GET',
       dataType: 'json',
       beforeSend: function (xhr) {
-        const token = localStorage.getItem('X-AUTH-TOKEN');
-        xhr.setRequestHeader("X-AUTH-TOKEN", token);
+        const token = localStorage.getItem('jwt');
+        xhr.setRequestHeader("Authorization", token);
       },
       success: function (data) {
         // 가져온 문의 목록 데이터를 기반으로 동적으로 생성하여 화면에 표시합니다
@@ -296,8 +295,8 @@
         message: message
       },
       beforeSend: function (xhr) {
-        const token = localStorage.getItem('X-AUTH-TOKEN');
-        xhr.setRequestHeader("X-AUTH-TOKEN", token);
+        const token = localStorage.getItem('jwt');
+        xhr.setRequestHeader("Authorization", token);
       },
       success: function (data) {
         // 문의 전송 후 문의 목록을 갱신합니다

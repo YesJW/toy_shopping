@@ -234,8 +234,8 @@
       },
       dataType: 'json',
       beforeSend: function (xhr) {
-        const token = localStorage.getItem('X-AUTH-TOKEN');
-        xhr.setRequestHeader("X-AUTH-TOKEN", token);
+        const token = localStorage.getItem('jwt');
+        xhr.setRequestHeader("Authorization", token);
       },
       success: function (response) {
         alert('상품이 장바구니에 추가되었습니다.');
@@ -253,8 +253,8 @@
       data: { id: productId },
       dataType: 'html',
       beforeSend: function (xhr) {
-        const token = localStorage.getItem('X-AUTH-TOKEN');
-        xhr.setRequestHeader("X-AUTH-TOKEN", token);
+        const token = localStorage.getItem('jwt');
+        xhr.setRequestHeader("Authorization", token);
       },
       success: function (product) {
         // 상세 페이지로 이동
