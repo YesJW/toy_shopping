@@ -3,6 +3,8 @@ package com.toyshopping.toy_shopping.data.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -17,14 +19,13 @@ public class ShoppingCart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cNum;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
-    private Product pNum;
+    private int count;
 
-    @Column(nullable = false)
-    private Integer stock;
+    @OneToMany(mappedBy = "cart",cascade = CascadeType.ALL)
+    private List<CartProduct> pNum;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
     private Users uno;
+
 }

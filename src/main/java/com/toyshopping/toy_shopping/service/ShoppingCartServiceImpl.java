@@ -1,10 +1,13 @@
 package com.toyshopping.toy_shopping.service;
 
+import com.toyshopping.toy_shopping.data.dto.CartProductDto;
 import com.toyshopping.toy_shopping.data.dto.ShoppingCartDto;
 import com.toyshopping.toy_shopping.data.dto.ShoppingCartResponseDto;
+import com.toyshopping.toy_shopping.data.entity.CartProduct;
 import com.toyshopping.toy_shopping.data.entity.Product;
 import com.toyshopping.toy_shopping.data.entity.ShoppingCart;
 import com.toyshopping.toy_shopping.data.entity.Users;
+import com.toyshopping.toy_shopping.repository.CartProductRepository;
 import com.toyshopping.toy_shopping.repository.ProductRepository;
 import com.toyshopping.toy_shopping.repository.ShoppingCartRepository;
 import com.toyshopping.toy_shopping.repository.UserRepository;
@@ -16,18 +19,23 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 
 public class ShoppingCartServiceImpl implements ShoppingCartService{
 
-    private final ShoppingCartRepository shoppingCartRepository;
+    private ShoppingCartRepository shoppingCartRepository;
 
-    private final ProductRepository productRepository;
+    private ProductRepository productRepository;
     private UserRepository userRepository;
 
+    private CartProductRepository cartProductRepository;
     private Logger LOGGER = LoggerFactory.getLogger(ShoppingCartServiceImpl.class);
-    public ShoppingCartServiceImpl(ShoppingCartRepository shoppingCartRepository, ProductRepository productRepository, UserRepository userRepository) {
+
+    public ShoppingCartServiceImpl(ShoppingCartRepository shoppingCartRepository, ProductRepository productRepository, UserRepository userRepository, CartProductRepository cartProductRepository) {
+        this.cartProductRepository = cartProductRepository;
         this.userRepository = userRepository;
         this.shoppingCartRepository = shoppingCartRepository;
         this.productRepository = productRepository;
@@ -35,50 +43,91 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
 
     @Override
     public ShoppingCartResponseDto addShoppingCartProduct(ShoppingCartDto shoppingCartDto) {
-        LOGGER.info("[addShoppingCratProduct] 쇼핑카트에 제품 추가");
+        LOGGER.info("[addShoppingCartProduct] 쇼핑카트에 제품 추가");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Users users = userRepository.getByUid(authentication.getName());
+        ShoppingCart shoppingCart = shoppingCartRepository.getByUno_id(users.getId());
+
+        if (shoppingCart == null) {
+            shoppingCart = ShoppingCart.builder()
+                    .count(0)
+                    .uno(users)
+                    .build();
+            shoppingCartRepository.save(shoppingCart);
+        }
+
         Product product = productRepository.getById(shoppingCartDto.getPNum());
-        ShoppingCart shoppingCart = new ShoppingCart();
-        shoppingCart.setUno(users);
-        shoppingCart.setPNum(product);
-        shoppingCart.setStock(shoppingCartDto.getStock());
-        ShoppingCart saveCart = shoppingCartRepository.save(shoppingCart);
+
+        CartProduct cartProduct = cartProductRepository.findByCart_cNumAndProduct_numb(shoppingCart.getCNum(), product.getNumb());
+
+        if (cartProduct == null) {
+            cartProduct = CartProduct.builder()
+                    .cart(shoppingCart)
+                    .count(shoppingCartDto.getStock())
+                    .product(product)
+                    .build();
+
+            cartProductRepository.save(cartProduct);
+        }
+
+        else{
+            CartProduct changeCartProduct = cartProduct;
+            changeCartProduct.setCount(shoppingCartDto.getStock());
+            cartProductRepository.save(changeCartProduct);
+        }
+        List<CartProductDto> cartProductDtos = new ArrayList<>();
+        for (CartProduct cartProducts : shoppingCart.getPNum()) {
+            CartProductDto cartProductDto = new CartProductDto();
+            cartProductDto.setId(cartProducts.getId());
+            cartProductDto.setCount(cartProducts.getCount());
+            cartProductDtos.add(cartProductDto);
+        }
+
 
         ShoppingCartResponseDto shoppingCartResponseDto = new ShoppingCartResponseDto();
-        shoppingCartResponseDto.setStock(saveCart.getStock());
-        shoppingCartResponseDto.setCNum(saveCart.getCNum());
-        shoppingCartResponseDto.setPNum(saveCart.getCNum());
-        shoppingCartResponseDto.setUser_no(saveCart.getUno().getId());
+        shoppingCartResponseDto.setStock(shoppingCart.getCount());
+        shoppingCartResponseDto.setCNum(shoppingCart.getCNum());
+        shoppingCartResponseDto.setPNum(cartProductDtos);
+        shoppingCartResponseDto.setUser_no(shoppingCart.getUno().getId());
         return shoppingCartResponseDto;
     }
 
     @Override
-    public List<ShoppingCartResponseDto> getShoppingCartProduct() {
+    public ShoppingCartResponseDto getShoppingCartProduct() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Users users = userRepository.getByUid(authentication.getName());
 
-        List<ShoppingCart> shoppingCarts = shoppingCartRepository.findAllByUno_id(users.getId());
-        List<ShoppingCartResponseDto> shoppingCartDtos= new ArrayList<>();
-        for (ShoppingCart shoppingCart : shoppingCarts) {
-            ShoppingCartResponseDto shoppingCartResponseDto = new ShoppingCartResponseDto();
-            shoppingCartResponseDto.setCNum(shoppingCart.getCNum());
-            shoppingCartResponseDto.setPNum(shoppingCart.getPNum().getNumb());
-            shoppingCartResponseDto.setUser_no(shoppingCart.getUno().getId());
-            shoppingCartResponseDto.setStock(shoppingCart.getStock());
-            shoppingCartResponseDto.setPrice(shoppingCart.getStock() * shoppingCart.getPNum().getPrice());
-            shoppingCartResponseDto.setPName(shoppingCart.getPNum().getName());
-            shoppingCartDtos.add(shoppingCartResponseDto);
 
+        Optional<ShoppingCart> cart = Optional.ofNullable(shoppingCartRepository.getByUno_id(users.getId()));
+        if (cart.isPresent()) {
+            ShoppingCart shoppingCart = shoppingCartRepository.getByUno_id(users.getId());
+            List<CartProductDto> cartProductDtos = new ArrayList<>();
+            for (CartProduct cartProducts : shoppingCart.getPNum()) {
+                CartProductDto cartProductDto = new CartProductDto();
+                cartProductDto.setProductName(cartProducts.getProduct().getName());
+                cartProductDto.setCount(cartProducts.getCount());
+                cartProductDto.setPrice(cartProducts.getCount() * cartProducts.getProduct().getPrice());
+                cartProductDtos.add(cartProductDto);
+            }
+
+            ShoppingCartResponseDto shoppingCartDtos = ShoppingCartResponseDto.builder()
+                    .pNum(cartProductDtos)
+                    .stock(shoppingCart.getCount())
+                    .user_no(shoppingCart.getUno().getId())
+                    .cNum(shoppingCart.getCNum())
+                    .build();
+
+            return shoppingCartDtos;
         }
-
-        return shoppingCartDtos;
+        else {
+            return null;
+        }
     }
 
     @Override
-    public ShoppingCartResponseDto changeCartProduct(Long cNum, int stock) {
-        ShoppingCart foundCart = shoppingCartRepository.findById(cNum).get();
-        foundCart.setStock(stock);
+    public ShoppingCartResponseDto changeCartProduct(Long cNum, int count) {
+/*        ShoppingCart foundCart = shoppingCartRepository.findById(cNum).get();
+        foundCart.setCount(count);
 
         ShoppingCart changeCart = shoppingCartRepository.save(foundCart);
 
@@ -88,7 +137,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
         shoppingCartResponseDto.setUser_no(changeCart.getUno().getId());
         shoppingCartResponseDto.setStock(changeCart.getStock());
 
-        return shoppingCartResponseDto;
+        return shoppingCartResponseDto;*/
+        return null;
     }
 
     @Override

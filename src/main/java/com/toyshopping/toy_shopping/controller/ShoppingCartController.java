@@ -47,8 +47,8 @@ public class ShoppingCartController {
 
     @GetMapping(value = "/getCart")
     @ResponseBody
-    public ResponseEntity<List<ShoppingCartResponseDto>> getCart() {
-        List<ShoppingCartResponseDto> shoppingCartProducts = shoppingCartService.getShoppingCartProduct();
+    public ResponseEntity<ShoppingCartResponseDto> getCart() {
+        ShoppingCartResponseDto shoppingCartProducts = shoppingCartService.getShoppingCartProduct();
 
         return ResponseEntity.status(HttpStatus.OK).body(shoppingCartProducts);
     }

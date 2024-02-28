@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class ProductController {
@@ -87,8 +88,10 @@ public class ProductController {
 
     @DeleteMapping("/deleteProduct")
     @ResponseBody
-    public ResponseEntity<String> deleteProduct(@RequestParam("number") Long number) throws Exception {
+    public ResponseEntity<String> deleteProduct(@RequestBody Map<String, Long> requestBody) throws Exception {
+        Long number = requestBody.get("number");
         productService.deleteProduct(number);
+
         return ResponseEntity.status(HttpStatus.OK).body("정상적으로 삭제되었습니다.");
     }
 
