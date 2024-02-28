@@ -19,8 +19,8 @@ $(document).ready(function() {
                     //let html = '';
                     const cartList = document.getElementById('cartList');
                     let totalPrice = 0;
-                    for (let i = 0; i < data.length; i++) {
-                        const item = data[i];
+                    for (let i = 0; i < data.pnum.length; i++) {
+                        const item = data.pnum[i];
 
                         // 쇼핑카트 목록에 새로운 행 추가
                         const row = document.createElement('tr');
@@ -35,13 +35,13 @@ $(document).ready(function() {
 
                         // Product 열
                         const productCell = document.createElement('td');
-                        productCell.textContent = item.pname;
+                        productCell.textContent = item.productName;
                         row.appendChild(productCell);
 
 
                         // Quantity 열
                         const quantityCell = document.createElement('td');
-                        quantityCell.textContent = item.stock + '개';
+                        quantityCell.textContent = item.count + '개';
                         row.appendChild(quantityCell);
 
                         // Price 열

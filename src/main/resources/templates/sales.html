@@ -98,7 +98,12 @@
               $.ajax({
                 url: '/deleteProduct',
                 type: 'DELETE',
-                data: { number: productId },
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({ number: productId }),
+                beforeSend: function (xhr) {
+                  xhr.setRequestHeader("Content-type", "application/json");
+                  xhr.setRequestHeader("Authorization", localStorage.getItem("jwt"));
+                },
                 success: function(data, status, xhr) {
                   console.log('Product deleted: ' + productId);
                   // 상품 삭제 성공 시 추가적인 로직 수행
@@ -106,6 +111,7 @@
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                   console.log('Error deleting product: ' + productId);
+                  console.log(typeof(productId))
                   // 상품 삭제 실패 시 추가적인 로직 수행
                 }
               });
