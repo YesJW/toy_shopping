@@ -6,6 +6,7 @@ import com.toyshopping.toy_shopping.data.entity.CartProduct;
 import com.toyshopping.toy_shopping.data.entity.Order;
 import com.toyshopping.toy_shopping.data.entity.OrderProduct;
 import com.toyshopping.toy_shopping.data.entity.Users;
+import com.toyshopping.toy_shopping.repository.OrderProductRepository;
 import com.toyshopping.toy_shopping.repository.OrderRepository;
 import com.toyshopping.toy_shopping.repository.UserRepository;
 import org.springframework.security.core.Authentication;
@@ -26,17 +27,18 @@ import static com.fasterxml.jackson.databind.type.LogicalType.DateTime;
 public class OrderService {
     private OrderRepository orderRepository;
     private UserRepository userRepository;
+    private OrderProductRepository orderProductRepository;
 
-    public OrderService(OrderRepository orderRepository, UserRepository userRepository) {
+    public OrderService(OrderRepository orderRepository, UserRepository userRepository, OrderProductRepository orderProductRepository) {
+        this.orderProductRepository = orderProductRepository;
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
     }
 
-    public Order createOrder() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Users users = userRepository.getByUid(authentication.getName());
+    public Order createOrder(Users users) {
+        Order order = Order.createdOrder(users);
 
-
+        return order;
 
     }
 
@@ -44,22 +46,20 @@ public class OrderService {
     public void buyCartProducts(List<CartProductDto> cartProductDtoList) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Users users = userRepository.getByUid(authentication.getName());
-
-        List<OrderProductDto> orderProductDtos = addOrderProducts(cartProductDtoList, , users);
-
-    }
-
-    @Transactional
-    public Order addOrder(List<OrderProduct> orderProducts, Users users) {
-
+        Order order = createOrder(users);
+        orderRepository.save(order);
+        List<OrderProduct> orderProducts = addOrderProducts(cartProductDtoList, order, users);
+        order.setOrderProducts(orderProducts);
+        orderRepository.save(order);
     }
 
 
-    public List<OrderProductDto> addOrderProducts(List<CartProductDto> cartProductDtos, Order order, Users users) {
-        List<OrderProductDto> orderProductDtos = new ArrayList<>();
+
+    public List<OrderProduct> addOrderProducts(List<CartProductDto> cartProductDtos, Order order, Users users) {
+        List<OrderProduct> orderProducts = new ArrayList<>();
 
         for (CartProductDto cartProductDto : cartProductDtos) {
-            OrderProductDto orderProductDto = OrderProductDto.builder()
+            OrderProduct orderProduct = OrderProduct.builder()
                     .order(order)
                     .price(cartProductDto.getPrice())
                     .productName(cartProductDto.getProductName())
@@ -68,10 +68,11 @@ public class OrderService {
                     .count(cartProductDto.getCount())
                     .users(users)
                     .build();
-            orderProductDtos.add(orderProductDto);
-
+            orderProductRepository.save(orderProduct);
+            orderProducts.add(orderProduct);
 
         }
+        return orderProducts;
     }
 
 }
