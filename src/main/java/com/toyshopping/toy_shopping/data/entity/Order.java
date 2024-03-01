@@ -1,6 +1,7 @@
 package com.toyshopping.toy_shopping.data.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -9,10 +10,12 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
-@Entity
+
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,5 +34,13 @@ public class Order {
     @PrePersist
     public void createdAt() {
         this.time = LocalDate.now();
+    }
+
+    public static Order createdOrder(Users users) {
+        Order order = new Order();
+        order.createdAt();
+        order.setUsers(users);
+
+        return order;
     }
 }
