@@ -2,8 +2,10 @@ package com.toyshopping.toy_shopping.service;
 
 import com.toyshopping.toy_shopping.data.dto.ProductDto;
 import com.toyshopping.toy_shopping.data.dto.ProductResponseDto;
+import com.toyshopping.toy_shopping.data.entity.CartProduct;
 import com.toyshopping.toy_shopping.data.entity.Product;
 import com.toyshopping.toy_shopping.data.entity.Users;
+import com.toyshopping.toy_shopping.repository.CartProductRepository;
 import com.toyshopping.toy_shopping.repository.ProductRepository;
 import com.toyshopping.toy_shopping.repository.UserRepository;
 import org.slf4j.Logger;
@@ -23,14 +25,17 @@ import java.util.UUID;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private final ProductRepository productRepository;
+    private ProductRepository productRepository;
 
     private UserRepository userRepository;
+
+    private CartProductRepository cartProductRepository;
     private final Logger LOGGER = LoggerFactory.getLogger(ProductServiceImpl.class);
 
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, UserRepository userRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, UserRepository userRepository, CartProductRepository cartProductRepository) {
+        this.cartProductRepository = cartProductRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
     }
@@ -144,6 +149,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteProduct(Long number) throws Exception {
+        List<CartProduct> cartProducts = cartProductRepository.findByProduct_numb(number);
+        if (!cartProducts.isEmpty()) {
+            for (CartProduct cartProduct : cartProducts) {
+                cartProduct.setProduct(null);
+                cartProductRepository.save(cartProduct);
+            }
+
+        }
         productRepository.deleteById(number);
     }
 
