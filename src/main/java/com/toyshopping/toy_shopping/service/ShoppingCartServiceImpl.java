@@ -126,19 +126,27 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
 
     @Override
     public ShoppingCartResponseDto changeCartProduct(Long cNum, int count) {
-/*        ShoppingCart foundCart = shoppingCartRepository.findById(cNum).get();
+        ShoppingCart foundCart = shoppingCartRepository.findById(cNum).get();
         foundCart.setCount(count);
 
         ShoppingCart changeCart = shoppingCartRepository.save(foundCart);
 
+        List<CartProductDto> cartProductDtos = new ArrayList<>();
+        for (CartProduct cartProducts : changeCart.getPNum()) {
+            CartProductDto cartProductDto = new CartProductDto();
+            cartProductDto.setId(cartProducts.getId());
+            cartProductDto.setCount(cartProducts.getCount());
+            cartProductDtos.add(cartProductDto);
+        }
+
+
         ShoppingCartResponseDto shoppingCartResponseDto = new ShoppingCartResponseDto();
         shoppingCartResponseDto.setCNum(changeCart.getCNum());
-        shoppingCartResponseDto.setPNum(changeCart.getPNum().getNumb());
+        shoppingCartResponseDto.setPNum(cartProductDtos);
         shoppingCartResponseDto.setUser_no(changeCart.getUno().getId());
-        shoppingCartResponseDto.setStock(changeCart.getStock());
+        shoppingCartResponseDto.setStock(changeCart.getCount());
 
-        return shoppingCartResponseDto;*/
-        return null;
+        return shoppingCartResponseDto;
     }
 
     @Override
