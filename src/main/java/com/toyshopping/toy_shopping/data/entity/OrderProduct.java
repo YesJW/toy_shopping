@@ -1,12 +1,16 @@
 package com.toyshopping.toy_shopping.data.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
+@Builder
 @Entity
 public class OrderProduct {
 
