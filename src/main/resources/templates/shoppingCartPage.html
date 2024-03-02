@@ -7,7 +7,19 @@
   <link rel="stylesheet" type="text/css" href="/css/shoppingStyle.css">
   <link rel="stylesheet" type="text/css" href="/css/style.css">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="/js/shoppingCart.js"></script>
+  <script>
+    $(document).ready(function() {
+      // 왼쪽 체크 버튼 클릭 시 이벤트 처리
+      $(document).on('click', '.check-button', function() {
+        // 체크 버튼의 상태 변경
+        $(this).toggleClass('checked');
+      });
+    });
+
+  </script>
   <script src="/js/headerjs.js"></script>
+
   <script>myHeader()</script>
 </head>
 <body>
@@ -51,18 +63,8 @@
 </table>
 <div id="cartSummary">
   <p>Total: <span id="totalPrice"></span></p>
-  <button id="checkoutButton">Checkout</button>
+  <button id="checkoutButton" onclick="checkoutBtnClick()">Checkout</button>
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="/js/shoppingCart.js"></script>
-<script>
-  $(document).ready(function() {
-    // 왼쪽 체크 버튼 클릭 시 이벤트 처리
-    $(document).on('click', '.check-button', function() {
-      // 체크 버튼의 상태 변경
-      $(this).toggleClass('checked');
-    });
-  });
-</script>
+
 </body>
 </html>

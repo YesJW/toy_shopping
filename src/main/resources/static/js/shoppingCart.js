@@ -1,4 +1,6 @@
+let checkedItems = [];
 $(document).ready(function() {
+
     // 쇼핑카트 목록을 가져와서 화면에 표시하는 함수
     function showCartList() {
         $('#cartList').empty();
@@ -21,7 +23,8 @@ $(document).ready(function() {
                     let totalPrice = 0;
                     for (let i = 0; i < data.pnum.length; i++) {
                         const item = data.pnum[i];
-
+                        checkedItems.push(item)
+                        console.log(checkedItems)
                         // 쇼핑카트 목록에 새로운 행 추가
                         const row = document.createElement('tr');
 
@@ -46,7 +49,7 @@ $(document).ready(function() {
 
                         // Price 열
                         const priceCell = document.createElement('td');
-                        priceCell.textContent = item.price + '원';
+                        priceCell.textContent = item.price * item.count + '원';
                         row.appendChild(priceCell);
 
 
@@ -67,25 +70,31 @@ $(document).ready(function() {
                         cartList.appendChild(row);
 
                         // totalPrice에 가격 추가
-                        totalPrice += item.price;
+                        totalPrice += item.price * item.count;
                         const totalPriceElement = document.getElementById('totalPrice');
                         totalPriceElement.textContent = totalPrice + '원';
 
                         checkbox.addEventListener('change', function() {
                             // 체크 상태가 변경되었을 때 처리할 로직
                             if (checkbox.checked) {
-                                totalPrice += item.price;
+                                totalPrice += item.price * item.count;
                                 totalPriceElement.textContent = totalPrice + '원';
+                                checkedItems.push(item)
 
                             } else {
-                                totalPrice -= item.price;
+                                totalPrice -= item.price * item.count;
                                 totalPriceElement.textContent = totalPrice + '원';
+                                const removedItemId = item.productId;
+                                checkedItems = checkedItems.filter(function(item) {
+                                    return item.productId !== removedItemId;
+                                });
+
 
                             }
                         });
 
                         deleteButton.addEventListener('click', function() {
-                            const productId = item.cnum;
+                            const productId = item.id;
                             removeFromCart(productId);
                         });
 
@@ -94,11 +103,13 @@ $(document).ready(function() {
 
                     //$('#cartList').html(html);
                 }
+
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log('Error: ' + errorThrown);
             }
         });
+
     }
 
     // 페이지 로드 시 쇼핑카트 목록을 화면에 표시
@@ -124,6 +135,31 @@ $(document).ready(function() {
                 console.log('Error: ' + errorThrown);
             }
         });
-    };
+    }
+
+
 });
+
+function checkoutBtnClick() {
+    //const checked = checkedItems.filter(item => item !== undefined && item !== null);
+    $.ajax({
+        url: '/buyProducts',
+        type: 'POST',
+        data: JSON.stringify(checkedItems),
+        contentType: 'application/json',
+        beforeSend: function (xhr){
+            const token = localStorage.getItem('jwt');
+            xhr.setRequestHeader("Authorization", token);
+        },
+        success: function (data, status, xhr) {
+            // 쇼핑카트 목록을 다시 가져와서 화면에 표시
+            location.reload()
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log(checkedItems)
+            console.log('Error: ' + errorThrown);
+        }
+    });
+
+}
 
