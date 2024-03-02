@@ -108,8 +108,8 @@
 <main>
   <div id="search-info">
     <h2>Search Results for: <span id="search-keyword"></span></h2>
-    <label for="sort-order">Sort by:</label>
-    <select id="sort-order">
+    <label for="sort-orders">Sort by:</label>
+    <select id="sort-orders">
       <option value="이름순">이름순</option>
       <option value="높은 가격순">높은 가격순</option>
       <option value="낮은 가격순">낮은 가격순</option>
@@ -166,7 +166,7 @@
         alert("Error loading products.");
       }
     });
-    $('#sort-order').change(function () {
+    $('#sort-orders').change(function () {
       const sortOrder = $(this).val();
       $.ajax({
         url: "/searchProducts",

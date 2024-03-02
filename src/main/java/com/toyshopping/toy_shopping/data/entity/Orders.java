@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Order {
+public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,7 +28,7 @@ public class Order {
     @DateTimeFormat(pattern = "yyyy-mm-dd")
     private LocalDate time;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "orders")
     private List<OrderProduct> orderProducts;
 
     @PrePersist
@@ -36,11 +36,11 @@ public class Order {
         this.time = LocalDate.now();
     }
 
-    public static Order createdOrder(Users users) {
-        Order order = new Order();
-        order.createdAt();
-        order.setUsers(users);
+    public static Orders createdOrder(Users users) {
+        Orders orders = new Orders();
+        orders.createdAt();
+        orders.setUsers(users);
 
-        return order;
+        return orders;
     }
 }
