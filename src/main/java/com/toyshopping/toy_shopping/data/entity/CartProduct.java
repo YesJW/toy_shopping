@@ -19,7 +19,7 @@ public class CartProduct {
 
     private int count;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "c_num")
     private ShoppingCart cart;
 
