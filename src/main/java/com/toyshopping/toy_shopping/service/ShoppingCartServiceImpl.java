@@ -30,7 +30,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
 
     private ProductRepository productRepository;
     private UserRepository userRepository;
-
     private CartProductRepository cartProductRepository;
     private Logger LOGGER = LoggerFactory.getLogger(ShoppingCartServiceImpl.class);
 
@@ -98,23 +97,25 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
         Users users = userRepository.getByUid(authentication.getName());
 
 
-        Optional<ShoppingCart> cart = Optional.ofNullable(shoppingCartRepository.getByUno_id(users.getId()));
-        if (cart.isPresent()) {
-            ShoppingCart shoppingCart = shoppingCartRepository.getByUno_id(users.getId());
+        Optional<ShoppingCart> shoppingCart = Optional.ofNullable(shoppingCartRepository.getByUno_id(users.getId()));
+        if (shoppingCart.isPresent()) {
+            ShoppingCart cart = shoppingCart.get();
             List<CartProductDto> cartProductDtos = new ArrayList<>();
-            for (CartProduct cartProducts : shoppingCart.getPNum()) {
+            for (CartProduct cartProducts : cart.getPNum()) {
                 CartProductDto cartProductDto = new CartProductDto();
+                cartProductDto.setId(cartProducts.getId());
                 cartProductDto.setProductName(cartProducts.getProduct().getName());
                 cartProductDto.setCount(cartProducts.getCount());
-                cartProductDto.setPrice(cartProducts.getCount() * cartProducts.getProduct().getPrice());
+                cartProductDto.setPrice(cartProducts.getProduct().getPrice());
+                cartProductDto.setProductId(cartProducts.getProduct().getNumb());
                 cartProductDtos.add(cartProductDto);
             }
 
             ShoppingCartResponseDto shoppingCartDtos = ShoppingCartResponseDto.builder()
                     .pNum(cartProductDtos)
-                    .stock(shoppingCart.getCount())
-                    .user_no(shoppingCart.getUno().getId())
-                    .cNum(shoppingCart.getCNum())
+                    .stock(cart.getCount())
+                    .user_no(cart.getUno().getId())
+                    .cNum(cart.getCNum())
                     .build();
 
             return shoppingCartDtos;
@@ -151,7 +152,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
 
     @Override
     public void deleteShoppingCartProduct(Long number) throws Exception {
-        shoppingCartRepository.deleteById(number);
+        cartProductRepository.deleteById(number);
 
     }
 }
