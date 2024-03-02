@@ -21,7 +21,7 @@ public class ShoppingCart {
 
     private int count;
 
-    @OneToMany(mappedBy = "cart",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cart",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartProduct> pNum;
 
 
