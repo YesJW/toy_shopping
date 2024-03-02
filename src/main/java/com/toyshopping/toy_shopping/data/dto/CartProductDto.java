@@ -23,4 +23,6 @@ public class CartProductDto {
 
     private int price;
 
+    private Long productId;
+
 }
