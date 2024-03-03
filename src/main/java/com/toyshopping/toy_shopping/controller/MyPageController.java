@@ -42,12 +42,17 @@ public class MyPageController {
 
     @GetMapping("/user_detail")
     @ResponseBody
-    public UsersDto getUser(Principal principal){
+    public UsersDto getUser(Principal principal) {
         LOGGER.info("[getUser] getUser 메서드 호출됨.");
         UsersDto userDto = new UsersDto();
         userDto.setUid(userRepository.getByUid(principal.getName()).getUid());
         userDto.setRoles(userRepository.getByUid(principal.getName()).getRoles());
         userDto.setName(userRepository.getByUid(principal.getName()).getName());
         return userDto;
+    }
+
+    @GetMapping("/order_history")
+    public String orderHistoryPage() {
+        return "/orderHistory";
     }
 }
