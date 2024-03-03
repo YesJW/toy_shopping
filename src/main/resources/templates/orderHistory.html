@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" type="text/css" href="/css/orderStyle.css">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="/js/orderHistory.js"></script>
+    <script src="/js/headerjs.js"></script>
+
+    <script>myHeader()</script>
+</head>
+<body>
+<header>
+    <include src="header.html"></include>
+    <nav>
+        <ul>
+            <li><a href="/main">Home</a></li>
+            <li><a href="/getProductPage">Shop</a></li>
+            <li><a href="/cart">Cart</a></li>
+            <li><a href="/contactPage">Contact</a></li>
+            <li>
+                <a href="/sign-api/login" id="login-btn" sec:authorize="isAnonymous()">Login</a>
+                <a href="" id="logout-btn" sec:authorize="isAuthenticated()">Logout</a>
+            </li>
+            <li><a href="/sign-api/register" id="register-btn">Sign up</a></li>
+            <li><a href="/mypage" id ="mypage-btn">My Page</a></li>
+            <li id = "search-li">
+                <form id="search-form" action="/searchPage" method="GET">
+                    <input type="text" name="q" placeholder="물품 검색">
+                    <button type="button" onclick="submitSearchForm()">검색</button>
+                </form>
+            </li>
+        </ul>
+    </nav>
+</header>
+<h1>Order List</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Order number</th>
+        <th>Product</th>
+        <th>Count</th>
+        <th>Price</th>
+        <th>Order date</th>
+    </tr>
+    </thead>
+    <tbody id="orderList">
+    <!-- 구매 목록이 동적으로 추가될 자리 -->
+    </tbody>
+</table>
+<div id="orderSummary">
+    <p>Total: <span id="totalCount"></span></p>
+</div>
+
+</body>
+</html>
