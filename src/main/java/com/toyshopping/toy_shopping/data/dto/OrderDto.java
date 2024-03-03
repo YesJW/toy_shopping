@@ -18,12 +18,8 @@ import java.util.List;
 @Builder
 public class OrderDto {
 
-    private Long id;
-
-    private Users users;
-
     private LocalDate time;
 
-    private List<OrderProduct> orderProducts;
+    private List<OrderProductDto> orderProducts;
 
 }
