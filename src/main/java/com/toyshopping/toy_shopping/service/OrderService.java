@@ -1,8 +1,6 @@
 package com.toyshopping.toy_shopping.service;
 
 import com.toyshopping.toy_shopping.data.dto.CartProductDto;
-import com.toyshopping.toy_shopping.data.dto.OrderDto;
-import com.toyshopping.toy_shopping.data.dto.OrderProductDto;
 import com.toyshopping.toy_shopping.data.entity.*;
 import com.toyshopping.toy_shopping.repository.*;
 import org.springframework.security.core.Authentication;
@@ -86,33 +84,4 @@ public class OrderService {
         return orderProducts;
     }
 
-    public List<OrderDto> getAllOrders() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Users users = userRepository.getByUid(authentication.getName());
-        List<Orders> findOrders = orderRepository.findAllByUsers_id(users.getId());
-        List<OrderDto> orderDtos = new ArrayList<>();
-        for (Orders orders : findOrders) {
-            List<OrderProductDto> orderProductDtos = new ArrayList<>();
-            for (OrderProduct orderProduct : orders.getOrderProducts()) {
-                OrderProductDto orderProductDto = OrderProductDto.builder()
-                        .orderId(orderProduct.getOrderNumber())
-                        .count(orderProduct.getCount())
-                        .price(orderProduct.getPrice())
-                        .total(orderProduct.getTotal())
-                        .productName(orderProduct.getProductName())
-                        .build();
-                orderProductDtos.add(orderProductDto);
-            }
-            OrderDto orderDto = OrderDto.builder()
-                    .orderProducts(orderProductDtos)
-                    .time(orders.getTime())
-                    .build();
-
-            orderDtos.add(orderDto);
-
-        }
-
-        return orderDtos;
-
-    }
 }
