@@ -48,7 +48,7 @@ public class SecurityConfiguration {
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/contactPage", "/contactAns", "/cart", "/addProductPage", "/productDetail", "/updatePage",
                         "/searchPage", "/main", "/getProductPage", "/mypage", "/sales", "/getFindIdPage", "/getPwPage",
-                        "/getResetPwPage","/mypage/sales","/searchProducts", "/mypage/order_history").permitAll()
+                        "/getResetPwPage","/mypage/sales","/searchProducts").permitAll()
                 .antMatchers("/findId","/reset_password").permitAll()
                 .antMatchers("/").permitAll()
                 .anyRequest().authenticated()
