@@ -25,7 +25,7 @@ public class Orders {
     @JoinColumn(name = "user_id")
     private Users users;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-mm-dd")
     private LocalDate time;
 
     @OneToMany(mappedBy = "orders")
