@@ -54,11 +54,11 @@ $(document).ready(function() {
                 xhr.setRequestHeader("Authorization", token);
             },
             success: function() {
-                alert('상품을 성공적으로 구매했습니다.');
+                alert('상품을 카트에 담았습니다.');
 // 구매 완료 후 다른 동작을 수행하거나 페이지를 이동할 수 있습니다.
             },
             error: function() {
-                alert('상품 구매에 실패했습니다.');
+                alert('상품을 카트에 담지 못했습니다.');
             }
         });
     });
