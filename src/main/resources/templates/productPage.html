@@ -68,11 +68,10 @@
                                 '<h3 class="product-name">' + product.name + '</h3>'+
                                 '<p class="product-stock">' +'남은 갯수: ' + product.stock + '</p>'+
                                 '<p class="product-price">$' + product.price + '</p>'+
-                                '<button class="add-to-cart-button" data-product-id="' + product.numb + '">Add to Cart</button>' + // data-product-id에 고유한 값을 부여
                                 '</div>'+
                                 '</div>'
                             ).find('.product').last().click(function() {
-                                var productId = $(this).find('.add-to-cart-button').data('product-id');
+                                var productId = product.numb
                                 getProductDetail(productId);
                             });
                         });
