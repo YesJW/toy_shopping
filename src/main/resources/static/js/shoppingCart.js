@@ -14,7 +14,7 @@ $(document).ready(function() {
             },
             success: function (data, status, xhr) {
                 // 쇼핑카트 목록이 비어있을 경우
-                if (data.length === 0) {
+                if (data.pnum.length === 0) {
                     $('#cartList').html('<p>쇼핑카트가 비어있습니다.</p>');
                 } else {
                     // 쇼핑카트 목록이 존재할 경우
@@ -96,6 +96,8 @@ $(document).ready(function() {
                         deleteButton.addEventListener('click', function() {
                             const productId = item.id;
                             removeFromCart(productId);
+                            totalPrice -= item.count * item.price
+                            totalPriceElement.textContent = totalPrice + '원';
                         });
 
 
