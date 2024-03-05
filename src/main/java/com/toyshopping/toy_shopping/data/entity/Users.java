@@ -32,7 +32,7 @@ public class Users implements UserDetails {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotBlank(message = "비밀번호를 입력해주세요.")
-    @Pattern(regexp = "((?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\\\W)(?=\\\\S+$).{8,16}\"\n",message = "비밀번호는 8~16자 대,소문자 + 숫자와 특수기호로 구성해야 합니다.")
+    @Pattern(regexp = "((?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\\\W)(?=\\\\S+$).{8,16}",message = "비밀번호는 8~16자 대,소문자 + 숫자와 특수기호로 구성해야 합니다.")
     @Column(nullable = false)
     private String password;
 
