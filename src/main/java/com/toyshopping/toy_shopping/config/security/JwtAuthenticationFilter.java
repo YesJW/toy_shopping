@@ -31,20 +31,13 @@ import java.util.Optional;
 public class JwtAuthenticationFilter extends GenericFilterBean {
     private final JwtTokenProvider jwtTokenProvider;
 
-    //private final RedisTemplate<String, Object> redisTemplate;
-
-
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         String token = resolveToken((HttpServletRequest) request);
 
         if (token != null && jwtTokenProvider.validateToken(token)) {
             // 토큰이 유효할 경우 토큰에서 Authentication 객체를 가지고 와서 SecurityContext에 저장
-
-            //String check_Logout = redisTemplate.opsForValue().get(token).toString();
-
             Authentication authentication = jwtTokenProvider.getAuthentication(token);
-            System.out.println("####################authen : "+authentication);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 

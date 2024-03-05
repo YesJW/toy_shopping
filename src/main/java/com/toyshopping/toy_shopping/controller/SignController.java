@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,27 +30,9 @@ public class SignController {
     @Autowired
     private SignService signService;
 
-
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
-
-
-
-
     @PostMapping(value = "/sign-in")
     @ResponseBody
     public ResponseEntity<JwtTokenDto> signIn(@RequestBody SignInDto signInDto){
-            /*@ApiParam(value = "ID", required = true) @RequestParam String id,
-            @ApiParam(value = "Password", required = true) @RequestParam String password,
-            HttpServletResponse response) throws RuntimeException {
-        LOGGER.info("[signIn] 로그인을 시도하고 있습니다. id : {}, pw : ****", id);
-         signInResultDto = signService.signIn(id, password);
-        if (signInResultDto.getCode() == 0) {
-            LOGGER.info("[signIn] 정상적으로 로그인이 되었습니다. id : {}, token : {}", id, signInResultDto.getToken());
-        }
-
-        response.setHeader("X-AUTH-TOKEN", signInResultDto.getToken());
-        return signInResultDto;*/
         String uid = signInDto.getUid();
         String password = signInDto.getPassword();
         JwtTokenDto jwtTokenDto = signService.signIn(uid, password);
@@ -63,23 +46,11 @@ public class SignController {
 
     @PostMapping(value = "/sign-up")
     @ResponseBody
-    public ResponseEntity<UsersDto> signUp(@RequestBody SignUpDto signUpDto) {
+    public ResponseEntity<UsersDto> signUp(@RequestBody @Valid SignUpDto signUpDto) {
+
         UsersDto usersDto = signService.signUp(signUpDto);
         return ResponseEntity.ok(usersDto);
     }
-        /*(
-            @ApiParam(value = "ID", required = true) @RequestParam("email") String id,
-            @ApiParam(value = "비밀번호", required = true) @RequestParam("password") String password,
-            @ApiParam(value = "이름", required = true) @RequestParam("name") String name,
-            @ApiParam(value = "전화번호", required = true) @RequestParam("phone") String phone)*/
-        /*String role = "USER";
-        LOGGER.info("[signUp] 회원가입을 수행합니다. id : {}, password : ****, name : {}, role : {}", id, name, role);
-        SignUpResultDto signUpResultDto = signService.signUp(id, password, name, phone, role);
-
-        LOGGER.info("[signUp] 회원가입을 완료했습니다. id : {}", id);
-        ModelAndView mav = new ModelAndView("login");
-        return mav;*/
-
 
 
     @GetMapping(value = "/exception")
