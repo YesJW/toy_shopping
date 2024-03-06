@@ -9,9 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @Data
 public class ShoppingCartDto {
-    //private Long cNum;
     private Long pNum;
-    //private int price;
     private int stock;
     private Long user_no;
 
