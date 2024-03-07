@@ -47,20 +47,26 @@
 ### ✅로그인
 ![image](https://github.com/YesJW/toy_shopping/assets/86145775/cfff3cc3-81f9-46ac-91f1-344c6101c2b1)
 
-### ✅상품 등록
+### ✅상품 관련
+
+- 상품 등록
 ![image](https://github.com/YesJW/toy_shopping/assets/86145775/c9643109-a8a0-4017-b4ee-927be88d49bb)
 
-### ✅상품 목록
-![image](https://github.com/YesJW/toy_shopping/assets/86145775/86d82af5-c2e5-409e-8d27-a341d5bd2c97)
+- 상품 목록
+![image](https://github.com/YesJW/toy_shopping/assets/86145775/022f4a1b-1b14-4e5b-b3d1-ebac2ae69eb9)
 
-### ✅상품 구매
+- 상품 검색
+![image](https://github.com/YesJW/toy_shopping/assets/86145775/f4cde4f1-f548-4482-b6f4-80a7289ef520)
+
+- 상품 구매
 ![image](https://github.com/YesJW/toy_shopping/assets/86145775/c68ce733-7055-401d-8bc4-9900f879f97d)
 
-### ✅쇼핑 카트
+- 쇼핑 카트
 ![image](https://github.com/YesJW/toy_shopping/assets/86145775/2d3d41a4-b38f-431f-952c-c779319f1597)
 
-### ✅구매 목록
+- 구매 목록
 ![image](https://github.com/YesJW/toy_shopping/assets/86145775/a6e54b43-8d1e-4da0-ad50-adca9092dff2)
+
 
 ### ✅관리자 QnA
 - QnA 페이지
