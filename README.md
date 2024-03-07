@@ -1,5 +1,3 @@
-![image](https://github.com/YesJW/toy_shopping/assets/86145775/607427b5-4c38-4429-831f-adf40832a16e)![image](https://github.com/YesJW/toy_shopping/assets/86145775/a988ad44-1e9a-4a49-b4e8-d637ac73eb0f)# Shopping Mall
-
 ## 💻프로젝트 소개
 - 쇼핑몰의 기능 구현을 통해 스프링부트 동작을 이해하기 위한 토이프로젝트
 
