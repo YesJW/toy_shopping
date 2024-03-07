@@ -41,6 +41,8 @@
 
 ## 🖼️ 주요 기능 실행 화면 
 
+### ✅회원가입
+![image](https://github.com/YesJW/toy_shopping/assets/86145775/14a1abb8-c9c7-476c-8806-af1b2d512f41)
 
 ### ✅로그인
 ![image](https://github.com/YesJW/toy_shopping/assets/86145775/cfff3cc3-81f9-46ac-91f1-344c6101c2b1)
